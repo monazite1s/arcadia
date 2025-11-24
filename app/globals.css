@@ -1,26 +1,166 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    /* Khaki + Beige Theme (Light Mode) */
+    --background: 33 24% 97%; /* #FBF8F4 米白色 */
+    --foreground: 30 15% 30%; /* #5C4F3D 浅棕色文字 */
+
+    --card: 33 24% 97%; /* 米白色卡片 */
+    --card-foreground: 30 15% 30%;
+
+    --popover: 33 24% 97%;
+    --popover-foreground: 30 15% 30%;
+
+    --primary: 35 25% 65%; /* #C9B896 卡其色 - 主题色 */
+    --primary-foreground: 30 15% 20%;
+
+    --secondary: 35 20% 85%; /* #E5DCC5 浅卡其 */
+    --secondary-foreground: 30 15% 30%;
+
+    --muted: 35 20% 90%; /* 更浅的卡其 */
+    --muted-foreground: 30 10% 50%;
+
+    --accent: 35 25% 65%; /* 卡其色强调 */
+    --accent-foreground: 30 15% 20%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 35 20% 80%; /* #D9D2C8 卡其色边框 */
+    --input: 35 20% 85%;
+    --ring: 35 25% 65%;
+
+    --radius: 8px; /* 圆角 */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+.dark {
+    /* Dark Mode - 深色主题 */
+    --background: 30 15% 12%; /* 深棕色背景 */
+    --foreground: 33 24% 90%; /* 浅米色文字 */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    --card: 30 15% 15%;
+    --card-foreground: 33 24% 90%;
+
+    --popover: 30 15% 15%;
+    --popover-foreground: 33 24% 90%;
+
+    --primary: 35 25% 55%; /* 深色模式下的卡其色 */
+    --primary-foreground: 33 24% 95%;
+
+    --secondary: 30 15% 20%;
+    --secondary-foreground: 33 24% 90%;
+
+    --muted: 30 15% 18%;
+    --muted-foreground: 30 10% 60%;
+
+    --accent: 35 25% 55%;
+    --accent-foreground: 33 24% 95%;
+
+    --destructive: 0 60% 40%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 30 15% 25%;
+    --input: 30 15% 20%;
+    --ring: 35 25% 55%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+/* Custom Scrollbar - Khaki Theme */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary));
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--accent));
+}
+
+/* Utility Classes */
+.khaki-card {
+    background: hsl(var(--card));
+    border: 2px solid hsl(var(--border));
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.khaki-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.khaki-button {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border: 2px solid hsl(var(--primary));
+    padding: 0.5rem 1rem;
+    border-radius: calc(var(--radius) - 2px);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.khaki-button:hover {
+    background: hsl(var(--accent));
+    border-color: hsl(var(--accent));
+    transform: translateY(-1px);
+}
+
+.khaki-input {
+    background: hsl(var(--input));
+    border: 2px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+    padding: 0.5rem 0.75rem;
+    border-radius: calc(var(--radius) - 2px);
+    transition: all 0.2s ease;
+}
+
+.khaki-input:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px hsla(var(--primary) / 0.1);
 }
