@@ -4,12 +4,14 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 
 import { ArticleBody } from "@/components/blog/ArticleBody";
+import { SeriesSidebar } from "@/components/blog/SeriesSidebar";
 import { TableOfContents } from "@/components/blog/TableOfContents";
-import { Flex, Grid, Stack } from "@/components/ui/layout";
+import { Flex, Stack } from "@/components/ui/layout";
 import { LocalMarkdownProvider } from "@/lib/content/LocalMarkdownProvider";
 
 const provider = new LocalMarkdownProvider();
 
+// SSG
 export async function generateStaticParams() {
     const posts = await provider.getPosts();
     return posts.map((post) => ({
@@ -43,17 +45,32 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         notFound();
     }
 
+    // Get series posts if this post belongs to a series
+    const seriesPosts = post.series
+        ? (await provider.getPosts())
+              .filter((p) => p.series === post.series)
+              .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        : [];
+
+    const hasSeries = seriesPosts.length > 0;
+
     return (
         <div className="container mx-auto max-w-screen-xl px-4 py-12">
-            {/* Two-Column Layout */}
-            <Grid
-                columns="1fr 300px"
-                gap="3rem"
-                className="items-start justify-center"
-                style={{ gridTemplateColumns: "minmax(0, 800px) minmax(250px, 300px)" }}
+            {/* Dynamic Layout: Three columns if series, two columns otherwise */}
+            <div
+                className={`grid items-start gap-6 ${
+                    hasSeries ? "lg:grid-cols-[250px_1fr_250px]" : "lg:grid-cols-[1fr_300px]"
+                }`}
             >
+                {/* Left Sidebar: Series (only if exists) */}
+                {hasSeries && (
+                    <aside className="sticky top-20 hidden lg:block">
+                        <SeriesSidebar currentPost={post} seriesPosts={seriesPosts} />
+                    </aside>
+                )}
+
                 {/* Main Content */}
-                <Stack gap="2rem">
+                <Stack gap="2rem" className={hasSeries ? "" : "max-w-[800px]"}>
                     <Link
                         href="/blog"
                         className="text-muted-foreground hover:text-foreground border-border hover:border-foreground inline-flex items-center border px-3 py-1.5 font-mono text-sm transition-colors"
@@ -85,6 +102,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                     </Link>
                                 ))}
                             </Flex>
+                            {post.series && (
+                                <>
+                                    <span>•</span>
+                                    <span className="text-primary">📚 {post.series}</span>
+                                </>
+                            )}
                         </Flex>
                     </Stack>
 
@@ -94,10 +117,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </Stack>
 
                 {/* Right Sidebar: TOC */}
-                <aside className="hidden lg:block">
+                <aside className="sticky top-20 hidden lg:block">
                     <TableOfContents />
                 </aside>
-            </Grid>
+            </div>
         </div>
     );
 }

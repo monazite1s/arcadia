@@ -59,6 +59,7 @@ export class LocalMarkdownProvider implements ContentProvider {
                     date: frontmatter.date,
                     tags: frontmatter.tags || [],
                     excerpt: frontmatter.excerpt,
+                    series: frontmatter.series,
                     content,
                 };
             })
@@ -85,6 +86,7 @@ export class LocalMarkdownProvider implements ContentProvider {
             date: frontmatter.date,
             tags: frontmatter.tags || [],
             excerpt: frontmatter.excerpt,
+            series: frontmatter.series,
             content,
         };
     }

@@ -18,7 +18,7 @@ export function Navbar() {
     return (
         <Flex
             as="nav"
-            className="border-border/40 bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 h-14 w-full border-b backdrop-blur"
+            className="border-border/40 bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 h-14 w-full border-b backdrop-blur-[4px]"
             align="center"
         >
             <Flex className="container max-w-screen-2xl" align="center">

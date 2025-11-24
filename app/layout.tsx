@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 
 import { GlobalFooter } from "@/components/layout/GlobalFooter";
 import { GlobalHeader } from "@/components/layout/GlobalHeader";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
@@ -33,22 +34,29 @@ export default function RootLayout({
                 <script
                     dangerouslySetInnerHTML={{
                         __html: `
-                            (function(){
-                            const theme = localStorage.getItem('theme') || 'light';
-                            if(theme === 'dark') {
-                                document.documentElement.classList.add('dark');
-                            } else {
-                                document.documentElement.classList.remove('dark');
-                            }
+                            (function () {
+                                try {
+                                    var root = document.documentElement;
+                                    var stored = localStorage.getItem('theme');
+                                    var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                                    var theme = stored === 'dark' || stored === 'light' ? stored : (mediaQuery.matches ? 'dark' : 'light');
+                                    root.classList.toggle('dark', theme === 'dark');
+                                    root.dataset.theme = theme;
+                                    root.style.colorScheme = theme;
+                                } catch (error) {
+                                    console.warn('Theme init failed', error);
+                                }
                             })();
                         `,
                     }}
                 />
-                <div className="flex min-h-screen flex-col">
-                    <GlobalHeader />
-                    <main className="flex-1 overflow-auto">{children}</main>
-                    <GlobalFooter />
-                </div>
+                <ThemeProvider>
+                    <div className="flex min-h-screen flex-col">
+                        <GlobalHeader />
+                        <main className="flex-1">{children}</main>
+                        <GlobalFooter />
+                    </div>
+                </ThemeProvider>
             </body>
         </html>
     );

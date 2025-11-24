@@ -7,6 +7,7 @@ export interface Post {
     tags: string[];
     content: ReactNode; // MDX content or compiled HTML
     excerpt?: string;
+    series?: string; // 专栏名称
 }
 
 export interface Tag {

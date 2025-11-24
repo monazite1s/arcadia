@@ -66,13 +66,7 @@ export async function parseMDX(source: string) {
                 remarkPlugins: [remarkGfm],
                 rehypePlugins: [
                     rehypeAddHeadingIds(headings),
-                    [
-                        rehypePrettyCode,
-                        {
-                            theme: "github-dark",
-                            keepBackground: false,
-                        },
-                    ],
+                    [rehypePrettyCode, { theme: "github-dark" }],
                 ],
             },
         },

@@ -30,7 +30,7 @@ export default async function BlogIndexPage() {
             {/* Three-Column Layout */}
             <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[300px_1fr_300px]">
                 {/* Left Sidebar: TagFilter */}
-                <aside className="hidden lg:block">
+                <aside className="sticky top-20 hidden lg:block">
                     <TagFilter tags={tags} />
                 </aside>
 
@@ -42,7 +42,7 @@ export default async function BlogIndexPage() {
                 </Stack>
 
                 {/* Right Sidebar: Search + Stats */}
-                <aside className="hidden lg:block">
+                <aside className="sticky top-20 hidden lg:block">
                     <Stack gap="2rem">
                         <SearchWidget posts={posts} />
                         <StatsWidget totalPosts={posts.length} totalTags={tags.length} />

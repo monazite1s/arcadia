@@ -71,7 +71,7 @@ export default async function ArchivesPage() {
                                         {months.map((month) => (
                                             <div key={`${year}-${month}`}>
                                                 {/* Month Header */}
-                                                <h3 className="text-muted-foreground mb-2 font-mono text-lg font-semibold">
+                                                <h3 className="text-muted-foreground mb-2 ml-4 font-mono text-lg font-semibold">
                                                     {month}月
                                                 </h3>
 
@@ -81,7 +81,7 @@ export default async function ArchivesPage() {
                                                         <Link
                                                             key={post.slug}
                                                             href={`/blog/${post.slug}`}
-                                                            className="group block"
+                                                            className="group ml-4 block"
                                                         >
                                                             <div className="hover:bg-muted/30 rounded-md px-3 py-2 transition-colors">
                                                                 <Flex

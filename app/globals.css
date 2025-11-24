@@ -57,6 +57,11 @@
     --ring: 35 25% 65%;
 
     --radius: 8px; /* 圆角 */
+    --article-heading: var(--foreground);
+    --article-text: var(--foreground);
+    --article-muted: var(--muted-foreground);
+    --article-link: var(--foreground);
+    --article-link-hover: var(--primary);
 }
 
 .dark {
@@ -88,6 +93,11 @@
     --border: 30 15% 25%;
     --input: 30 15% 20%;
     --ring: 35 25% 55%;
+    --article-heading: 35 55% 92%;
+    --article-text: 32 30% 88%;
+    --article-muted: 30 15% 70%;
+    --article-link: 35 70% 80%;
+    --article-link-hover: 35 85% 88%;
 }
 
 body {

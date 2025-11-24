@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Moon, Sun } from "lucide-react";
 
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { Flex } from "@/components/ui/layout";
 import { cn } from "@/lib/utils";
 
@@ -20,28 +19,13 @@ const navItems = [
 
 export function GlobalHeader() {
     const pathname = usePathname();
-    // 使用 lazy initialization 读取主题，仅依据 localStorage
-    const [isDark, setIsDark] = useState(() => {
-        if (typeof window === "undefined") return false;
-        const savedTheme = localStorage.getItem("theme");
-        return savedTheme === "dark";
-    });
-
-    const toggleTheme = () => {
-        const newTheme = !isDark;
-        setIsDark(newTheme);
-        localStorage.setItem("theme", newTheme ? "dark" : "light");
-        if (newTheme) {
-            document.documentElement.classList.add("dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-        }
-    };
+    const { theme, toggleTheme, mounted } = useTheme();
+    const isDark = theme === "dark";
 
     return (
         <Flex
             as="header"
-            className="border-border bg-background/95 supports-[backdrop-filter]:bg-background/80 sticky top-0 z-50 w-full border-b-2 backdrop-blur"
+            className="border-border bg-background/100 supports-[backdrop-filter]:bg-background/100 sticky top-0 z-50 w-full border-b-2 backdrop-blur-[4px]"
             align="center"
             style={{ height: "60px" }}
         >
@@ -77,7 +61,13 @@ export function GlobalHeader() {
                         className="border-border hover:bg-muted/50 text-muted-foreground hover:text-foreground rounded-md border-2 px-2 py-1.5 transition-colors"
                         aria-label="Toggle theme"
                     >
-                        {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                        {!mounted ? (
+                            <Moon className="h-4 w-4" />
+                        ) : isDark ? (
+                            <Sun className="h-4 w-4" />
+                        ) : (
+                            <Moon className="h-4 w-4" />
+                        )}
                     </button>
                 </Flex>
             </Flex>

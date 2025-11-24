@@ -33,7 +33,7 @@ export function SearchWidget({ posts }: SearchWidgetProps) {
     };
 
     return (
-        <Card className="sticky top-20">
+        <Card>
             <CardHeader>
                 <CardTitle className="font-mono text-lg">本地搜索</CardTitle>
             </CardHeader>

@@ -5,7 +5,7 @@ export default function Home() {
         <div className="bg-background text-foreground flex min-h-screen flex-col items-center justify-center">
             <main className="flex flex-col items-center gap-8 text-center">
                 <div className="space-y-4">
-                    <h1 className="from-primary animate-pulse bg-gradient-to-r via-amber-600 to-stone-600 bg-clip-text text-6xl font-bold tracking-tighter text-transparent sm:text-7xl">
+                    <h1 className="from-primary animate-pulse bg-gradient-to-r via-amber-300 to-yellow-600 bg-clip-text text-6xl font-bold tracking-tighter text-transparent sm:text-7xl">
                         ARCADIA
                     </h1>
                     <p className="text-muted-foreground max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
