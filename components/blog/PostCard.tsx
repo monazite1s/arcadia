@@ -26,7 +26,7 @@ export function PostCard({ post }: PostCardProps) {
                                 {format(new Date(post.date), "yyyy/MM/dd")}
                             </time>
                             <span>·</span>
-                            <Flex gap="0.5rem">
+                            <Flex gap="0.5rem" wrap="wrap">
                                 {post.tags.slice(0, 3).map((tag) => (
                                     <span
                                         key={tag}

@@ -13,7 +13,7 @@ export function ArticleBody({ children, className }: ArticleBodyProps) {
             className={cn(
                 "prose prose-slate dark:prose-invert max-w-none",
                 // Headings
-                "prose-headings:font-mono prose-headings:font-bold prose-headings:tracking-tight",
+                "prose-headings:font-mono prose-headings:font-bold prose-headings:tracking-tight prose-headings:scroll-mt-20",
                 "prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl",
                 "prose-h2:border-b prose-h2:pb-2 prose-h2:mb-4",
                 // Links

@@ -30,6 +30,20 @@ export default function RootLayout({
     return (
         <html lang="zh-CN" suppressHydrationWarning>
             <body className={cn(inter.className, jetbrainsMono.className, "antialiased")}>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            (function(){
+                            const theme = localStorage.getItem('theme') || 'light';
+                            if(theme === 'dark') {
+                                document.documentElement.classList.add('dark');
+                            } else {
+                                document.documentElement.classList.remove('dark');
+                            }
+                            })();
+                        `,
+                    }}
+                />
                 <div className="flex min-h-screen flex-col">
                     <GlobalHeader />
                     <main className="flex-1 overflow-auto">{children}</main>

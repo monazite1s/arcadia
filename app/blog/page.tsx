@@ -2,7 +2,7 @@ import { PostCard } from "@/components/blog/PostCard";
 import { SearchWidget } from "@/components/blog/SearchWidget";
 import { StatsWidget } from "@/components/blog/StatsWidget";
 import { TagFilter } from "@/components/blog/TagFilter";
-import { Grid, Stack } from "@/components/ui/layout";
+import { Stack } from "@/components/ui/layout";
 import { LocalMarkdownProvider } from "@/lib/content/LocalMarkdownProvider";
 
 export const revalidate = 600; // ISR: Revalidate every 10 minutes
@@ -27,12 +27,8 @@ export default async function BlogIndexPage() {
             </Stack>
 
             {/* Three-Column Layout */}
-            <Grid
-                columns="300px 1fr 300px"
-                gap="2rem"
-                className="items-start"
-                style={{ gridTemplateColumns: "minmax(250px, 300px) 1fr minmax(250px, 300px)" }}
-            >
+            {/* Three-Column Layout */}
+            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[300px_1fr_300px]">
                 {/* Left Sidebar: TagFilter */}
                 <aside className="hidden lg:block">
                     <TagFilter tags={tags} />
@@ -52,14 +48,20 @@ export default async function BlogIndexPage() {
                         <StatsWidget totalPosts={posts.length} totalTags={tags.length} />
                     </Stack>
                 </aside>
-            </Grid>
+            </div>
 
             {/* Mobile: Filters and Stats below content */}
-            <div className="mt-8 lg:hidden">
-                <Stack gap="2rem">
-                    <SearchWidget posts={posts} />
-                    <TagFilter tags={tags} />
-                    <StatsWidget totalPosts={posts.length} totalTags={tags.length} />
+            <div className="mt-8 w-full lg:hidden">
+                <Stack gap="2rem" className="w-full">
+                    <div className="w-full">
+                        <SearchWidget posts={posts} />
+                    </div>
+                    <div className="w-full">
+                        <TagFilter tags={tags} />
+                    </div>
+                    <div className="w-full">
+                        <StatsWidget totalPosts={posts.length} totalTags={tags.length} />
+                    </div>
                 </Stack>
             </div>
         </div>

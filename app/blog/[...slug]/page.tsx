@@ -13,13 +13,14 @@ const provider = new LocalMarkdownProvider();
 export async function generateStaticParams() {
     const posts = await provider.getPosts();
     return posts.map((post) => ({
-        slug: post.slug,
+        slug: post.slug.split("/"),
     }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }) {
     const { slug } = await params;
-    const post = await provider.getPostBySlug(slug);
+    const slugStr = slug.join("/");
+    const post = await provider.getPostBySlug(slugStr);
 
     if (!post) {
         return {
@@ -33,9 +34,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
 }
 
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string[] }> }) {
     const { slug } = await params;
-    const post = await provider.getPostBySlug(slug);
+    const slugStr = slug.join("/");
+    const post = await provider.getPostBySlug(slugStr);
 
     if (!post) {
         notFound();

@@ -8,28 +8,58 @@ import { ContentProvider } from "./ContentProvider";
 
 const POSTS_PATH = path.join(process.cwd(), "content/posts");
 
-export class LocalMarkdownProvider implements ContentProvider {
-    async getPosts(): Promise<Post[]> {
-        if (!fs.existsSync(POSTS_PATH)) {
-            return [];
-        }
+/**
+ * 递归遍历目录，获取所有 mdx 文件的完整路径
+ */
+function walkMdxFiles(dir: string, baseDir = dir): string[] {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
 
-        const files = fs.readdirSync(POSTS_PATH).filter((file) => file.endsWith(".mdx"));
+    let mdxFiles: string[] = [];
+
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+
+        if (entry.isDirectory()) {
+            mdxFiles = mdxFiles.concat(walkMdxFiles(fullPath, baseDir));
+        } else if (entry.isFile() && entry.name.endsWith(".mdx")) {
+            // 保存相对于 baseDir 的路径
+            mdxFiles.push(path.relative(baseDir, fullPath));
+        }
+    }
+    return mdxFiles;
+}
+
+export class LocalMarkdownProvider implements ContentProvider {
+    /**
+     * 多级目录下读取所有 MDX
+     */
+    async getPosts(): Promise<Post[]> {
+        if (!fs.existsSync(POSTS_PATH)) return [];
+
+        // 获取所有子目录的 mdx 路径
+        const files = walkMdxFiles(POSTS_PATH);
+        // files 示例：
+        // [
+        //   "2024/jan/post-a.mdx",
+        //   "react/hooks/useMemo.mdx"
+        // ]
 
         const posts = await Promise.all(
-            files.map(async (file) => {
-                const filePath = path.join(POSTS_PATH, file);
+            files.map(async (relativePath) => {
+                const filePath = path.join(POSTS_PATH, relativePath);
                 const source = fs.readFileSync(filePath, "utf8");
                 const { frontmatter, content } = await parseMDX(source);
-                const slug = file.replace(/\.mdx$/, "");
+
+                // slug = 不含 .mdx 的相对路径（带多级目录）
+                const slug = relativePath.replace(/\.mdx$/, "");
 
                 return {
-                    slug,
-                    title: frontmatter.title as string,
-                    date: frontmatter.date as string,
-                    tags: (frontmatter.tags as string[]) || [],
-                    excerpt: frontmatter.excerpt as string,
-                    content: content, // ReactNode
+                    slug, // "react/hooks/useMemo"
+                    title: frontmatter.title,
+                    date: frontmatter.date,
+                    tags: frontmatter.tags || [],
+                    excerpt: frontmatter.excerpt,
+                    content,
                 };
             })
         );
@@ -37,23 +67,25 @@ export class LocalMarkdownProvider implements ContentProvider {
         return posts.sort((a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1));
     }
 
+    /**
+     * 根据多级目录 slug 获取文章
+     * slug 如：react/hooks/useMemo
+     */
     async getPostBySlug(slug: string): Promise<Post | null> {
         const filePath = path.join(POSTS_PATH, `${slug}.mdx`);
 
-        if (!fs.existsSync(filePath)) {
-            return null;
-        }
+        if (!fs.existsSync(filePath)) return null;
 
         const source = fs.readFileSync(filePath, "utf8");
         const { frontmatter, content } = await parseMDX(source);
 
         return {
             slug,
-            title: frontmatter.title as string,
-            date: frontmatter.date as string,
-            tags: (frontmatter.tags as string[]) || [],
-            excerpt: frontmatter.excerpt as string,
-            content: content,
+            title: frontmatter.title,
+            date: frontmatter.date,
+            tags: frontmatter.tags || [],
+            excerpt: frontmatter.excerpt,
+            content,
         };
     }
 

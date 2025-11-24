@@ -92,13 +92,34 @@
 
 body {
     background-color: hsl(var(--background));
+    background-image:
+        linear-gradient(to right, hsla(var(--foreground) / 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, hsla(var(--foreground) / 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
     color: hsl(var(--foreground));
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth theme transitions - target specific elements */
+html,
+body,
+a,
+button,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
     transition:
-        background-color 0.3s ease,
-        color 0.3s ease;
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
 }
 
 /* Custom Scrollbar - Khaki Theme */

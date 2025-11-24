@@ -34,7 +34,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
     return (
         <div className="container mx-auto max-w-5xl px-4 py-12">
             <div className="mb-12 flex flex-col items-start gap-4">
-                <h1 className="text-4xl font-bold tracking-tight">
+                <h1 className="text-4xl font-bold tracking-tight break-words">
                     Tagged: <span className="text-primary">{decodedTag}</span>
                 </h1>
                 <p className="text-muted-foreground text-xl">
@@ -42,7 +42,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
                 </p>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
                 {posts.map((post) => (
                     <PostCard key={post.slug} post={post} />
                 ))}
