@@ -70,7 +70,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 )}
 
                 {/* Main Content */}
-                <Stack gap="2rem" className={hasSeries ? "" : "max-w-[800px]"}>
+                <Stack gap="1rem" className={hasSeries ? "" : "max-w-[800px]"}>
                     <Link
                         href="/blog"
                         className="text-muted-foreground hover:text-foreground border-border hover:border-foreground inline-flex items-center border px-3 py-1.5 font-mono text-sm transition-colors"

@@ -1,0 +1,84 @@
+---
+title: "MDX 组件使用示例"
+date: "2025-11-25"
+tags: ["MDX", "React", "组件"]
+excerpt: "展示如何在 MDX 文件中使用自定义 React 组件"
+series: "MDX 教程"
+---
+
+这篇文章展示了如何在 MDX 文件中使用自定义 React 组件。
+
+## Alert 组件示例
+
+### 信息提示
+
+<Alert type="info" title="提示">
+    这是一个**信息提示框**，用于显示一般性的提示信息。
+</Alert>
+
+### 警告提示
+
+<Alert type="warning" title="注意">
+    这是一个**警告提示框**，用于提醒用户注意某些重要事项。
+</Alert>
+
+### 错误提示
+
+<Alert type="error" title="错误">
+    这是一个**错误提示框**，用于显示错误信息或失败状态。
+</Alert>
+
+### 成功提示
+
+<Alert type="success" title="成功">
+    这是一个**成功提示框**，用于显示操作成功的消息。
+</Alert>
+
+## Callout 组件示例
+
+<Callout emoji="💡">**重点提示**：Callout 组件适合用来突出显示重要内容或补充说明。</Callout>
+
+<Callout emoji="📌">你可以自定义 emoji 来表达不同的含义。</Callout>
+
+<Callout emoji="🚀">这个组件非常适合用于： - 重点标注 - 补充说明 - 提示信息 - 最佳实践</Callout>
+
+## 代码示例
+
+普通的代码块：
+
+```typescript
+// 这是普通的代码块
+interface User {
+    id: number;
+    name: string;
+    email: string;
+}
+
+const user: User = {
+    id: 1,
+    name: "Alice",
+    email: "alice@example.com",
+};
+```
+
+## 组合使用
+
+你可以将多个组件组合使用：
+
+<Alert type="info" title="组合示例">
+    在 Alert 组件中，你可以使用 **Markdown 语法**： - 列表项 1 - 列表项 2 - 列表项 3 还可以使用
+    `行内代码` 和 [链接](https://example.com)。
+</Alert>
+
+<Callout emoji="💡">
+    **最佳实践**： 1. 使用 Alert 组件来显示重要提示 2. 使用 Callout 组件来突出重点内容 3.
+    保持组件使用的一致性
+</Callout>
+
+## 总结
+
+MDX 让你可以在 Markdown 中使用 React 组件，使文章更加丰富和交互式！
+
+<Alert type="success" title="完成">
+    现在你已经学会如何在 MDX 文件中使用自定义组件了！🎉
+</Alert>

@@ -1,9 +1,11 @@
 import { compileMDX } from "next-mdx-remote/rsc";
 
 import type { Element, Node, Root } from "hast";
+import type { MDXComponents } from "mdx/types";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
 
+import { Alert, Callout, CodeSandbox, Tweet, YouTube } from "@/components/mdx/MDXComponents";
 import { Post } from "@/lib/types";
 
 // 目录标题接口
@@ -54,7 +56,21 @@ function rehypeAddHeadingIds(headings: TOCHeading[]) {
     };
 }
 
-const components = {};
+/**
+ * MDX 自定义组件映射
+ *
+ * 这些组件可以在 .mdx 文件中直接使用，例如：
+ * <Alert type="info">这是提示</Alert>
+ * <Callout emoji="💡">重点内容</Callout>
+ */
+const components: MDXComponents = {
+    // 自定义组件
+    Alert,
+    Callout,
+    CodeSandbox,
+    YouTube,
+    Tweet,
+};
 
 export async function parseMDX(source: string) {
     const headings = extractHeadings(source);
