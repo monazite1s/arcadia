@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 
 import { PostCard } from "~/src/components/blog/PostCard";
-import { LocalMarkdownProvider } from "~/src/lib/content/LocalMarkdownProvider";
+import { getContentProvider } from "~/src/lib/content";
 
-const provider = new LocalMarkdownProvider();
+const provider = getContentProvider();
 
 export async function generateStaticParams() {
     const tags = await provider.getTags();

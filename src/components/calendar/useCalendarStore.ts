@@ -1,15 +1,10 @@
 import { create } from "zustand";
 import { ApiCalendarProvider } from "~/src/lib/calendar/ApiCalendarProvider";
-import { LocalCalendarProvider } from "~/src/lib/calendar/LocalCalendarProvider";
 import { CalendarEvent } from "~/src/lib/types";
 
-// import { startOfMonth, endOfMonth } from "date-fns";
-
-// Initialize provider lazily
-const USE_API = process.env.NEXT_PUBLIC_USE_CALENDAR_API === "true";
-let provider: LocalCalendarProvider | ApiCalendarProvider;
+let provider: ApiCalendarProvider;
 if (typeof window !== "undefined") {
-    provider = USE_API ? new ApiCalendarProvider() : new LocalCalendarProvider();
+    provider = new ApiCalendarProvider();
 }
 
 interface CalendarState {

@@ -69,6 +69,10 @@ interface ContentProvider {
 - **LocalMarkdownProvider**：从本地 `content/posts` 读取 MDX 文件，支持多级目录
 - **ApiContentProvider**：预留的 API 实现（待开发）
 
+**切换数据源**：通过环境变量 `NEXT_PUBLIC_USE_API` 控制
+
+详见 [Sanity 迁移指南](./docs/SANITY_MIGRATION.md)
+
 #### Markdown 渲染管线
 
 ```text

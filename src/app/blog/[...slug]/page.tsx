@@ -6,9 +6,9 @@ import { ArticleBody } from "~/src/components/blog/ArticleBody";
 import { SeriesSidebar } from "~/src/components/blog/SeriesSidebar";
 import { TableOfContents } from "~/src/components/blog/TableOfContents";
 import { Flex, Stack } from "~/src/components/ui/layout";
-import { LocalMarkdownProvider } from "~/src/lib/content/LocalMarkdownProvider";
+import { getContentProvider } from "~/src/lib/content";
 
-const provider = new LocalMarkdownProvider();
+const provider = getContentProvider();
 
 // SSG
 export async function generateStaticParams() {
@@ -54,25 +54,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     const hasSeries = seriesPosts.length > 0;
 
     return (
-        <div className="container mx-auto max-w-screen-xl px-4 py-12">
-            {/* Dynamic Layout: Three columns if series, two columns otherwise */}
-            <div
-                className={`grid items-start gap-6 ${
-                    hasSeries ? "lg:grid-cols-[250px_1fr_250px]" : "lg:grid-cols-[1fr_300px]"
-                }`}
-            >
-                {/* Left Sidebar: Series (only if exists) */}
-                {hasSeries && (
-                    <aside className="sticky top-20 hidden lg:block">
+        <div className="container mx-auto max-w-screen-2xl px-4 py-12">
+            {/* Fixed Grid Layout - Content Always in Same Position */}
+            <div className="grid grid-cols-[300px_1fr_300px] items-start gap-6">
+                {/* Left Sidebar: Series or Empty Space */}
+                <aside className="sticky top-20 hidden lg:block">
+                    {hasSeries ? (
                         <SeriesSidebar currentPost={post} seriesPosts={seriesPosts} />
-                    </aside>
-                )}
+                    ) : (
+                        <div /> // 占位元素，保持布局一致
+                    )}
+                </aside>
 
-                {/* Main Content */}
-                <Stack
-                    gap="1rem"
-                    className={hasSeries ? "min-w-[660px]" : "max-w-[800px] min-w-[660px]"}
-                >
+                {/* Main Content - Always in Center Column */}
+                <Stack gap="1rem" className="mx-auto w-full max-w-[1000px]">
                     <Link
                         href="/blog"
                         className="text-muted-foreground hover:text-foreground border-border hover:border-foreground inline-flex items-center border px-3 py-1.5 font-mono text-sm transition-colors"
@@ -118,7 +113,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     <ArticleBody>{post.content}</ArticleBody>
                 </Stack>
 
-                {/* Right Sidebar: TOC */}
+                {/* Right Sidebar: TOC - Always Present */}
                 <aside className="sticky top-20 hidden lg:block">
                     <TableOfContents />
                 </aside>

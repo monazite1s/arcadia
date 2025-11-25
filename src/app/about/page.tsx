@@ -6,7 +6,7 @@ import { ArticleBody } from "~/src/components/blog/ArticleBody";
 import { Stack } from "~/src/components/ui/layout";
 import { parseMDX } from "~/src/lib/markdown/mdxParser";
 
-const ABOUT_FILE_PATH = path.join(process.cwd(), "content/about/about.mdx");
+const ABOUT_FILE_PATH = path.join(process.cwd(), "src/content/about/about.mdx");
 
 async function getAboutContent() {
     const source = await fs.readFile(ABOUT_FILE_PATH, "utf8");

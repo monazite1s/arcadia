@@ -3,11 +3,11 @@ import { SearchWidget } from "~/src/components/blog/SearchWidget";
 import { StatsWidget } from "~/src/components/blog/StatsWidget";
 import { TagFilter } from "~/src/components/blog/TagFilter";
 import { Stack } from "~/src/components/ui/layout";
-import { LocalMarkdownProvider } from "~/src/lib/content/LocalMarkdownProvider";
+import { getContentProvider } from "~/src/lib/content";
 
 export const revalidate = 600; // ISR: Revalidate every 10 minutes
 
-const provider = new LocalMarkdownProvider();
+const provider = getContentProvider();
 
 export const metadata = {
     title: "博客 | Arcadia",
@@ -27,8 +27,7 @@ export default async function BlogIndexPage() {
             </Stack>
 
             {/* Three-Column Layout */}
-            {/* Three-Column Layout */}
-            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[300px_1fr_300px]">
+            <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[300px_1fr_300px]">
                 {/* Left Sidebar: TagFilter */}
                 <aside className="sticky top-20 hidden lg:block">
                     <TagFilter tags={tags} />

@@ -2,9 +2,9 @@ import Link from "next/link";
 
 import { Card } from "~/src/components/ui/card";
 import { Grid, Stack } from "~/src/components/ui/layout";
-import { LocalMarkdownProvider } from "~/src/lib/content/LocalMarkdownProvider";
+import { getContentProvider } from "~/src/lib/content";
 
-const provider = new LocalMarkdownProvider();
+const provider = getContentProvider();
 
 export const metadata = {
     title: "标签 | Arcadia",
