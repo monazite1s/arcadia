@@ -163,12 +163,10 @@ export class SanityContentProvider implements ContentProvider {
             series
         }`;
 
-        // @ts-expect-error - GROQ query type inference issue with next-sanity
-        const posts = (await client.fetch(
-            query,
-            { tag },
-            { next: { revalidate: 30 } }
-        )) as SanityPostListItem[];
+        const queryParams = { tag } as Record<string, unknown>;
+        const posts = (await client.fetch(query, queryParams, {
+            next: { revalidate: 30 },
+        })) as SanityPostListItem[];
 
         return posts.map((sanityPost) => ({
             slug: sanityPost.slug.current,
