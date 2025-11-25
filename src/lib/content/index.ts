@@ -4,13 +4,14 @@ import { SanityContentProvider } from "./SanityContentProvider";
 
 /**
  * Provider 工厂函数
- * 根据环境变量决定使用本地文件系统、API 还是 Sanity CMS
+ * 默认使用 Sanity CMS（生产环境）
+ * 本地开发可设置 NEXT_PUBLIC_USE_LOCAL=true 使用本地 MDX
  */
 export function getContentProvider(): IContentProvider {
-    const useSanity = process.env.NEXT_PUBLIC_USE_SANITY === "true";
+    const useLocal = process.env.NEXT_PUBLIC_USE_LOCAL === "true";
 
-    if (useSanity) return new SanityContentProvider();
-    return new LocalMarkdownProvider();
+    if (useLocal) return new LocalMarkdownProvider();
+    return new SanityContentProvider();
 }
 
 // 默认导出
