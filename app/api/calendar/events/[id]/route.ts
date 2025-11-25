@@ -4,6 +4,9 @@ import { CalendarService } from "@/lib/services/calendar.service";
 
 const service = new CalendarService();
 
+// 🚨 解决 Build Error: 强制动态渲染
+export const dynamic = "force-dynamic";
+
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await params;
