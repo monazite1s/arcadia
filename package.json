@@ -8,7 +8,12 @@
         "start": "next start",
         "lint": "eslint",
         "commit": "cz",
-        "prepare": "husky"
+        "prepare": "husky",
+        "check:unused": "knip",
+        "check:unused:files": "knip --include files",
+        "check:unused:deps": "knip --include dependencies",
+        "check:unused:exports": "knip --include exports",
+        "check:unused:report": "knip --reporter markdown > DEAD_CODE_REPORT.md && echo Report generated: DEAD_CODE_REPORT.md"
     },
     "config": {
         "commitizen": {
@@ -16,6 +21,7 @@
         }
     },
     "dependencies": {
+        "@prisma/client": "^5.22.0",
         "@radix-ui/react-slot": "^1.2.4",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
@@ -24,6 +30,7 @@
         "lucide-react": "^0.554.0",
         "next": "16.0.3",
         "next-mdx-remote": "^5.0.0",
+        "prisma": "^5.22.0",
         "react": "19.2.0",
         "react-dom": "19.2.0",
         "rehype-pretty-code": "^0.14.1",
@@ -49,11 +56,12 @@
         "eslint": "^9",
         "eslint-config-next": "16.0.3",
         "husky": "^9.1.7",
+        "knip": "^5.70.2",
         "lint-staged": "^16.2.7",
         "prettier": "^3.6.2",
         "prettier-plugin-tailwindcss": "^0.7.1",
         "tailwindcss": "^4",
-        "typescript": "^5"
+        "typescript": "5.9.3"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx,md,mdx,json,css}": [

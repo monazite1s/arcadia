@@ -28,26 +28,27 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-const getInitialTheme = (): Theme => {
-    if (typeof document === "undefined") {
-        return "light";
-    }
-    const declaredTheme = document.documentElement.dataset.theme;
-    if (declaredTheme === "dark" || declaredTheme === "light") {
-        return declaredTheme;
-    }
-    return resolveTheme();
-};
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
+    const [mounted, setMounted] = useState(false);
     const [theme, setThemeState] = useState<Theme>(() => {
-        const initial = getInitialTheme();
-        if (typeof document !== "undefined") {
-            applyThemeToDocument(initial);
+        // SSR: always return light to avoid hydration mismatch
+        if (typeof window === "undefined") {
+            return "light";
         }
-        return initial;
+        // Client initial render: use resolved theme
+        return resolveTheme();
     });
-    const mounted = typeof window !== "undefined";
+
+    // Apply theme on mount and mark as mounted
+    useEffect(() => {
+        const actualTheme = resolveTheme();
+        if (actualTheme !== theme) {
+            setThemeState(actualTheme);
+        }
+        applyThemeToDocument(actualTheme);
+        setMounted(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Only run once on mount
 
     const applyAndStoreTheme = useCallback((nextTheme: Theme, persist = true) => {
         setThemeState(nextTheme);
@@ -58,6 +59,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }, []);
 
     useEffect(() => {
+        if (!mounted) return;
+
         const unsubscribe = subscribeToSystemTheme((systemTheme) => {
             const stored = typeof window !== "undefined" ? localStorage.getItem(THEME_KEY) : null;
             if (stored === "dark" || stored === "light") {
@@ -71,7 +74,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
                 unsubscribe();
             }
         };
-    }, [applyAndStoreTheme]);
+    }, [applyAndStoreTheme, mounted]);
 
     const handleSetTheme = useCallback(
         (nextTheme: Theme) => {

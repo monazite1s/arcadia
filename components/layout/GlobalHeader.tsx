@@ -60,10 +60,9 @@ export function GlobalHeader() {
                         onClick={toggleTheme}
                         className="border-border hover:bg-muted/50 text-muted-foreground hover:text-foreground rounded-md border-2 px-2 py-1.5 transition-colors"
                         aria-label="Toggle theme"
+                        suppressHydrationWarning
                     >
-                        {!mounted ? (
-                            <Moon className="h-4 w-4" />
-                        ) : isDark ? (
+                        {mounted && isDark ? (
                             <Sun className="h-4 w-4" />
                         ) : (
                             <Moon className="h-4 w-4" />

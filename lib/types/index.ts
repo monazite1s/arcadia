@@ -18,8 +18,8 @@ export interface Tag {
 export interface CalendarEvent {
     id: string;
     title: string;
-    start: Date;
-    end: Date;
     description?: string;
-    allDay?: boolean;
+    date: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }

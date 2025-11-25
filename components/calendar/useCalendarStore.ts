@@ -1,14 +1,16 @@
 import { create } from "zustand";
 
+import { ApiCalendarProvider } from "@/lib/calendar/ApiCalendarProvider";
 import { LocalCalendarProvider } from "@/lib/calendar/LocalCalendarProvider";
 import { CalendarEvent } from "@/lib/types";
 
 // import { startOfMonth, endOfMonth } from "date-fns";
 
 // Initialize provider lazily
-let provider: LocalCalendarProvider;
+const USE_API = process.env.NEXT_PUBLIC_USE_CALENDAR_API === "true";
+let provider: LocalCalendarProvider | ApiCalendarProvider;
 if (typeof window !== "undefined") {
-    provider = new LocalCalendarProvider();
+    provider = USE_API ? new ApiCalendarProvider() : new LocalCalendarProvider();
 }
 
 interface CalendarState {
@@ -18,8 +20,8 @@ interface CalendarState {
 
     // Actions
     setCurrentDate: (date: Date) => void;
-    fetchEvents: () => Promise<void>;
-    addEvent: (event: Omit<CalendarEvent, "id">) => Promise<void>;
+    fetchEvents: (start: Date, end: Date) => Promise<void>;
+    addEvent: (event: Omit<CalendarEvent, "id" | "createdAt" | "updatedAt">) => Promise<void>;
     updateEvent: (event: CalendarEvent) => Promise<void>;
     deleteEvent: (id: string) => Promise<void>;
 }
@@ -31,44 +33,56 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
 
     setCurrentDate: (date) => {
         set({ currentDate: date });
-        get().fetchEvents();
+        // fetchEvents will be called by the component effect when date changes
     },
 
-    fetchEvents: async () => {
+    fetchEvents: async (start: Date, end: Date) => {
         if (!provider) return;
         set({ isLoading: true });
 
-        // const start = startOfMonth(currentDate);
-        // const end = endOfMonth(currentDate);
-
-        // Fetch a bit more buffer if needed, but month view is standard
-        // Actually, let's fetch all for now to be safe with cross-month events or just simple implementation
-        // The provider filter implementation above filters strictly by range.
-        // Let's fetch a wide range for now.
-        const events = await provider.getEvents(new Date(0), new Date("2100-01-01"));
-
-        set({ events, isLoading: false });
+        try {
+            const events = await provider.getEvents(start, end);
+            set({ events, isLoading: false });
+        } catch (error) {
+            console.error("Failed to fetch events:", error);
+            set({ isLoading: false });
+        }
     },
 
     addEvent: async (eventData) => {
         if (!provider) return;
-        const newEvent = await provider.createEvent(eventData);
-        set((state) => ({ events: [...state.events, newEvent] }));
+        try {
+            const newEvent = await provider.createEvent(eventData);
+            set((state) => ({ events: [...state.events, newEvent] }));
+        } catch (error) {
+            console.error("Failed to add event:", error);
+            throw error;
+        }
     },
 
     updateEvent: async (event) => {
         if (!provider) return;
-        await provider.updateEvent(event);
-        set((state) => ({
-            events: state.events.map((e) => (e.id === event.id ? event : e)),
-        }));
+        try {
+            const updatedEvent = await provider.updateEvent(event);
+            set((state) => ({
+                events: state.events.map((e) => (e.id === event.id ? updatedEvent : e)),
+            }));
+        } catch (error) {
+            console.error("Failed to update event:", error);
+            throw error;
+        }
     },
 
     deleteEvent: async (id) => {
         if (!provider) return;
-        await provider.deleteEvent(id);
-        set((state) => ({
-            events: state.events.filter((e) => e.id !== id),
-        }));
+        try {
+            await provider.deleteEvent(id);
+            set((state) => ({
+                events: state.events.filter((e) => e.id !== id),
+            }));
+        } catch (error) {
+            console.error("Failed to delete event:", error);
+            throw error;
+        }
     },
 }));

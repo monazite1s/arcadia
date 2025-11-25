@@ -21,7 +21,7 @@ export function TodoDialog({ isOpen, onClose, selectedDate }: TodoDialogProps) {
     const [description, setDescription] = useState("");
 
     const dayEvents = events.filter((event) => {
-        const eventDate = new Date(event.start);
+        const eventDate = new Date(event.date);
         return (
             eventDate.getFullYear() === selectedDate.getFullYear() &&
             eventDate.getMonth() === selectedDate.getMonth() &&
@@ -33,17 +33,10 @@ export function TodoDialog({ isOpen, onClose, selectedDate }: TodoDialogProps) {
         e.preventDefault();
         if (!title.trim()) return;
 
-        const start = new Date(selectedDate);
-        start.setHours(9, 0, 0, 0);
-        const end = new Date(selectedDate);
-        end.setHours(10, 0, 0, 0);
-
         addEvent({
             title: title.trim(),
             description: description.trim(),
-            start,
-            end,
-            allDay: true,
+            date: selectedDate,
         });
 
         setTitle("");

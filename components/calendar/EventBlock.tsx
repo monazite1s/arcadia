@@ -21,9 +21,7 @@ export function EventBlock({ event, onClick, style, className }: EventBlockProps
             onClick={onClick}
         >
             <div className="truncate font-semibold">{event.title}</div>
-            <div className="truncate opacity-80">
-                {format(new Date(event.start), "h:mm a")} - {format(new Date(event.end), "h:mm a")}
-            </div>
+            <div className="truncate opacity-80">{format(new Date(event.date), "MMM d, yyyy")}</div>
         </div>
     );
 }

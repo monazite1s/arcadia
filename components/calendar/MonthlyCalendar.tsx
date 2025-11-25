@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
     addMonths,
@@ -54,10 +54,19 @@ export function MonthlyCalendar() {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const { events } = useCalendarStore();
+    const { events, fetchEvents } = useCalendarStore();
 
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(currentMonth);
+
+    // Fetch events when month changes
+    useEffect(() => {
+        // Fetch a bit more buffer (previous and next month) to handle edge cases if needed
+        // For now, fetching the current month view range is sufficient
+        const start = startOfWeek(monthStart, { weekStartsOn: 0 });
+        const end = endOfWeek(monthEnd, { weekStartsOn: 0 });
+        fetchEvents(start, end);
+    }, [currentMonth, fetchEvents, monthStart, monthEnd]);
     const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
     const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
 
@@ -75,7 +84,7 @@ export function MonthlyCalendar() {
 
     const getDayEvents = (day: Date) => {
         return events.filter((event) => {
-            const eventDate = new Date(event.start);
+            const eventDate = new Date(event.date);
             return isSameDay(eventDate, day);
         });
     };

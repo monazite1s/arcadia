@@ -1,60 +1,62 @@
-import { DBSchema, IDBPDatabase, openDB } from "idb";
+import { openDB } from "idb";
 
 import { CalendarEvent } from "@/lib/types";
 
 import { CalendarProvider } from "./CalendarProvider";
 
-interface ArcadiaDB extends DBSchema {
-    events: {
-        key: string;
-        value: CalendarEvent;
-        indexes: { "by-start": Date };
-    };
-}
+const DB_NAME = "arcadia-calendar";
+const STORE_NAME = "events";
 
 export class LocalCalendarProvider implements CalendarProvider {
-    private dbPromise: Promise<IDBPDatabase<ArcadiaDB>>;
-
-    constructor() {
-        this.dbPromise = Promise.resolve() as unknown as Promise<IDBPDatabase<ArcadiaDB>>; // SSR safe
-
-        this.dbPromise = openDB<ArcadiaDB>("arcadia-calendar", 1, {
+    private async getDB() {
+        return openDB(DB_NAME, 1, {
             upgrade(db) {
-                const store = db.createObjectStore("events", { keyPath: "id" });
-                store.createIndex("by-start", "start");
+                if (!db.objectStoreNames.contains(STORE_NAME)) {
+                    const store = db.createObjectStore(STORE_NAME, {
+                        keyPath: "id",
+                        autoIncrement: true,
+                    });
+                    store.createIndex("date", "date");
+                }
             },
         });
     }
 
     async getEvents(start: Date, end: Date): Promise<CalendarEvent[]> {
-        if (typeof window === "undefined") return [];
-        const db = await this.dbPromise;
-        const allEvents = await db.getAll("events");
-
-        // Filter in memory for simplicity (IndexedDB ranges can be complex with date objects)
-        return allEvents.filter(
-            (event) => new Date(event.start) >= start && new Date(event.end) <= end
-        );
+        const db = await this.getDB();
+        const allEvents = (await db.getAll(STORE_NAME)) as CalendarEvent[];
+        return allEvents.filter((event) => {
+            const eventDate = new Date(event.date);
+            return eventDate >= start && eventDate <= end;
+        });
     }
 
-    async createEvent(event: Omit<CalendarEvent, "id">): Promise<CalendarEvent> {
-        const db = await this.dbPromise;
-        const newEvent: CalendarEvent = {
+    async createEvent(
+        event: Omit<CalendarEvent, "id" | "createdAt" | "updatedAt">
+    ): Promise<CalendarEvent> {
+        const db = await this.getDB();
+        const newEvent = {
             ...event,
             id: crypto.randomUUID(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
         };
-        await db.put("events", newEvent);
+        await db.add(STORE_NAME, newEvent);
         return newEvent;
     }
 
     async updateEvent(event: CalendarEvent): Promise<CalendarEvent> {
-        const db = await this.dbPromise;
-        await db.put("events", event);
-        return event;
+        const db = await this.getDB();
+        const updatedEvent = {
+            ...event,
+            updatedAt: new Date(),
+        };
+        await db.put(STORE_NAME, updatedEvent);
+        return updatedEvent;
     }
 
     async deleteEvent(id: string): Promise<void> {
-        const db = await this.dbPromise;
-        await db.delete("events", id);
+        const db = await this.getDB();
+        await db.delete(STORE_NAME, id);
     }
 }

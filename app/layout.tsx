@@ -30,26 +30,40 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="zh-CN" suppressHydrationWarning>
-            <body className={cn(inter.className, jetbrainsMono.className, "antialiased")}>
+            <head>
+                {/* 🎯 关键：在任何内容渲染前执行，消除闪烁 */}
                 <script
                     dangerouslySetInnerHTML={{
                         __html: `
-                            (function () {
+                            (function() {
                                 try {
+                                    // 与 lib/theme.ts 中的 resolveTheme() 逻辑完全一致
                                     var root = document.documentElement;
                                     var stored = localStorage.getItem('theme');
-                                    var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-                                    var theme = stored === 'dark' || stored === 'light' ? stored : (mediaQuery.matches ? 'dark' : 'light');
+                                    var theme;
+                                    
+                                    // 优先使用存储的主题
+                                    if (stored === 'dark' || stored === 'light') {
+                                        theme = stored;
+                                    } else {
+                                        // 回退到系统主题
+                                        var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                                        theme = mediaQuery.matches ? 'dark' : 'light';
+                                    }
+                                    
+                                    // 立即应用主题，避免闪烁
                                     root.classList.toggle('dark', theme === 'dark');
                                     root.dataset.theme = theme;
                                     root.style.colorScheme = theme;
-                                } catch (error) {
-                                    console.warn('Theme init failed', error);
+                                } catch (e) {
+                                    // 静默失败，使用默认 light 主题
                                 }
                             })();
                         `,
                     }}
                 />
+            </head>
+            <body className={cn(inter.className, jetbrainsMono.className, "antialiased")}>
                 <ThemeProvider>
                     <div className="flex min-h-screen flex-col">
                         <GlobalHeader />
