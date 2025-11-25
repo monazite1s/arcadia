@@ -9,6 +9,7 @@
         "lint": "eslint",
         "commit": "cz",
         "prepare": "husky",
+        "postinstall": "prisma generate",
         "check:unused": "knip",
         "check:unused:files": "knip --include files",
         "check:unused:deps": "knip --include dependencies",
