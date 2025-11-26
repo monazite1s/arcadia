@@ -4,6 +4,7 @@ import type { Element, Node, Root } from "hast";
 import type { MDXComponents } from "mdx/types";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
+import { Image } from "~/src/components/mdx/Image";
 import { Alert, Callout, CodeSandbox, Tweet, YouTube } from "~/src/components/mdx/MDXComponents";
 import { Post } from "~/src/lib/types";
 
@@ -62,6 +63,7 @@ function rehypeAddHeadingIds(headings: TOCHeading[]) {
  * <Alert type="info">这是提示</Alert>
  * <Callout emoji="💡">重点内容</Callout>
  */
+
 const components: MDXComponents = {
     // 自定义组件
     Alert,
@@ -69,6 +71,7 @@ const components: MDXComponents = {
     CodeSandbox,
     YouTube,
     Tweet,
+    Image,
 };
 
 export async function parseMDX(source: string) {

@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 
+export { Image } from "./Image";
+
 interface AlertProps {
     /** 提示类型：info(信息)、warning(警告)、error(错误)、success(成功) */
     type?: "info" | "warning" | "error" | "success";

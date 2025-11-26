@@ -99,7 +99,7 @@ export function TableOfContents() {
                             onClick={(e) => handleClick(e, heading.id)}
                             className={cn(
                                 "cursor-pointer border-l-2 py-1 text-sm transition-colors",
-                                heading.level === 3 && "pl-4",
+                                heading.level === 3 && "pl-6",
                                 heading.level === 2 && "pl-2",
                                 activeId === heading.id
                                     ? "border-foreground font-medium"

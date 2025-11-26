@@ -109,6 +109,10 @@
     --mdx-blockquote-border: 35 25% 65%;
     --mdx-blockquote-text: 30 15% 35%;
 
+    /* Image */
+    --mdx-image-border: 35 20% 80%;
+    --mdx-image-caption-text: 30 10% 50%;
+
     /* ===== 文章内容专用颜色 ===== */
     --article-heading: 30 15% 30%;
     --article-text: 30 15% 30%;
@@ -199,6 +203,10 @@
     --mdx-blockquote-border: 35 25% 55%;
     --mdx-blockquote-text: 33 24% 85%;
 
+    /* Image */
+    --mdx-image-border: 30 15% 25%;
+    --mdx-image-caption-text: 30 10% 60%;
+
     /* ===== 文章内容专用颜色 ===== */
     --article-heading: 35 40% 95%; /* 提高标题亮度 */
     --article-text: 32 20% 92%; /* 提高正文亮度 */
@@ -249,6 +257,22 @@ p {
         background-color 0.15s ease,
         border-color 0.15s ease,
         color 0.15s ease;
+}
+
+/**
+ * ============================================
+ * 分割线样式
+ * ============================================
+ */
+hr {
+    border: none;
+    border-top: 2px solid hsl(var(--border));
+    margin: 2rem 0;
+    opacity: 0.8;
+}
+
+hr:hover {
+    opacity: 1;
 }
 
 /**

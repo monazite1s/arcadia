@@ -1,53 +1,280 @@
 ---
-title: "MDX 组件使用示例"
-date: "2025-11-25"
-tags: ["MDX", "React", "组件"]
-excerpt: "展示如何在 MDX 文件中使用自定义 React 组件"
+title: "MDX 组件完整使用指南"
+date: "2025-11-26"
+tags: ["MDX", "React", "组件", "文档"]
+excerpt: "完整展示博客中所有可用的 MDX 自定义组件及其使用方法"
 series: "MDX 教程"
 ---
 
-这篇文章展示了如何在 MDX 文件中使用自定义 React 组件。
+这篇文章展示了博客中所有可用的 MDX 自定义组件,包括使用示例和最佳实践。
 
-## Alert 组件示例
+## 目录
 
-### 信息提示
+- Alert 提示框组件
+- Callout 标注框组件
+- Image 图片组件
+- YouTube 视频组件
+- CodeSandbox 代码沙盒
+- 组合使用示例
 
-<Alert type="info" title="提示">
-    这是一个**信息提示框**，用于显示一般性的提示信息。
+## Alert 提示框组件
+
+Alert 组件用于显示重要提示、警告、错误或成功信息,支持 4 种类型。
+
+### Info - 信息提示
+
+<Alert type="info" title="💡 信息提示">
+    这是一个**信息提示框**,用于显示一般性的提示信息。支持 **Markdown
+    语法**,包括加粗、斜体、`行内代码`等。
 </Alert>
 
-### 警告提示
+### Warning - 警告提示
 
-<Alert type="warning" title="注意">
-    这是一个**警告提示框**，用于提醒用户注意某些重要事项。
+<Alert type="warning" title="⚠️ 注意事项">
+    这是一个**警告提示框**,用于提醒用户注意某些重要事项。
+
+    - 可以包含列表
+    - 支持多行内容
+    - 自动适配深色/浅色主题
+
 </Alert>
 
-### 错误提示
+### Error - 错误提示
 
-<Alert type="error" title="错误">
-    这是一个**错误提示框**，用于显示错误信息或失败状态。
+<Alert type="error" title="❌ 错误信息">
+    这是一个**错误提示框**,用于显示错误信息或失败状态。
+
+    ```bash
+    # 甚至可以包含代码块
+    npm install error-package
+    ```
+
 </Alert>
 
-### 成功提示
+### Success - 成功提示
 
-<Alert type="success" title="成功">
-    这是一个**成功提示框**，用于显示操作成功的消息。
+<Alert type="success" title="✅ 操作成功">
+    这是一个**成功提示框**,用于显示操作成功的消息。非常适合用于教程中标记完成的步骤!
 </Alert>
 
-## Callout 组件示例
+## Callout 标注框组件
 
-<Callout emoji="💡">**重点提示**：Callout 组件适合用来突出显示重要内容或补充说明。</Callout>
+Callout 组件用于突出显示重要内容或补充说明,可以自定义 emoji 图标。
 
-<Callout emoji="📌">你可以自定义 emoji 来表达不同的含义。</Callout>
+<Callout emoji="📌">**默认标注**: 使用默认的 📌 图标,适合一般性的重点标注。</Callout>
 
-<Callout emoji="🚀">这个组件非常适合用于： - 重点标注 - 补充说明 - 提示信息 - 最佳实践</Callout>
+<Callout emoji="💡">**提示标注**: 使用 💡 图标,适合提供额外的提示或技巧。</Callout>
+
+<Callout emoji="🚀">**最佳实践**: 使用 🚀 图标,适合分享最佳实践或性能优化建议。</Callout>
+
+<Callout emoji="📚">
+    **参考资料**: 使用 📚 图标,适合引用文档或外部资源。可以包含链接:[MDX
+    官方文档](https://mdxjs.com/)
+</Callout>
+
+<Callout emoji="⚡">
+    **快速提示**: Callout 组件非常适合用于: - 重点标注关键信息 - 补充说明和注意事项 -
+    提供额外的上下文 - 分享技巧和最佳实践
+</Callout>
+
+## Image 图片组件
+
+Image 组件提供了强大的图片展示功能,支持多种尺寸预设、图片说明、加载状态和错误处理。
+
+### 基础用法
+
+<Image src="https://picsum.photos/800/600" alt="随机示例图片" />
+
+### 尺寸预设
+
+<Alert type="info" title="尺寸说明">
+    图片组件提供 4 种尺寸预设: - **small**: 400px 最大宽度,适合小图标、示意图 - **medium**: 600px
+    最大宽度,默认尺寸,适合常规配图 - **large**: 800px 最大宽度,适合重要配图 - **full**: 100%
+    宽度,适合全宽展示
+</Alert>
+
+#### Small 小图
+
+<Image
+    src="https://picsum.photos/400/400"
+    alt="小图示例"
+    size="small"
+    caption="400x400 的小尺寸图片"
+/>
+
+#### Medium 中图 (默认)
+
+<Image
+    src="https://picsum.photos/600/400"
+    alt="中图示例"
+    size="medium"
+    caption="600x400 的中等尺寸图片 (默认)"
+/>
+
+#### Large 大图
+
+<Image
+    src="https://picsum.photos/800/500"
+    alt="大图示例"
+    size="large"
+    caption="800x500 的大尺寸图片"
+/>
+
+#### Full 全宽
+
+<Image
+    src="https://picsum.photos/1200/400"
+    alt="全宽图片"
+    size="full"
+    caption="1200x400 的全宽图片,占据整个容器宽度"
+/>
+
+### 1:1 长宽比图片
+
+<Callout emoji="✅">
+    **问题解决**: 1:1 长宽比的图片不再占满整个宽度,而是根据尺寸预设合理显示,避免图片过大的问题。
+</Callout>
+
+<Image
+    src="https://picsum.photos/500/500"
+    alt="正方形图片 - 小尺寸"
+    size="small"
+    caption="500x500 正方形图片,使用 small 尺寸"
+/>
+
+<Image
+    src="https://picsum.photos/600/600"
+    alt="正方形图片 - 中等尺寸"
+    size="medium"
+    caption="600x600 正方形图片,使用 medium 尺寸"
+/>
+
+### 图片说明文字
+
+<Image
+    src="https://picsum.photos/700/400"
+    alt="带详细说明的图片"
+    size="large"
+    caption="这是一张示例图片,展示了如何添加图片说明文字。Caption 会以斜体显示在图片下方,并自动适配主题颜色。"
+/>
+
+## YouTube 视频组件
+
+YouTube 组件用于嵌入 YouTube 视频,自动响应式布局。
+
+<Alert type="info" title="使用说明">
+    只需提供 YouTube 视频 URL 中 `v=` 后面的视频 ID 即可。 例如:
+    `https://www.youtube.com/watch?v=dQw4w9WgXcQ` 中的 ID 是 `dQw4w9WgXcQ`
+</Alert>
+
+<YouTube id="dQw4w9WgXcQ" title="Rick Astley - Never Gonna Give You Up" />
+
+<Callout emoji="📺">YouTube 组件会自动保持 16:9 的宽高比,并在不同屏幕尺寸下响应式调整。</Callout>
+
+## CodeSandbox 代码沙盒
+
+CodeSandbox 组件用于嵌入可交互的代码示例,非常适合技术教程。
+
+<Alert type="info" title="使用说明">
+    提供 CodeSandbox 项目的 ID,可以从 CodeSandbox URL 中获取。 例如:
+    `https://codesandbox.io/s/react-new` 中的 ID 是 `react-new`
+</Alert>
+
+<CodeSandbox id="react-new" title="React 基础示例" />
+
+<Callout emoji="💻">
+    CodeSandbox 组件会嵌入一个完整的在线 IDE,读者可以直接在文章中编辑和运行代码。
+</Callout>
+
+## 组合使用示例
+
+MDX 的强大之处在于可以灵活组合使用各种组件,创建丰富的内容体验。
+
+### 示例 1: 教程步骤
+
+<Alert type="info" title="第一步: 安装依赖">
+    首先安装必要的依赖包: ```bash npm install react react-dom ```
+</Alert>
+
+<Image
+    src="https://picsum.photos/700/400"
+    alt="项目结构示例"
+    size="large"
+    caption="图 1: 项目的目录结构"
+/>
+
+<Callout emoji="💡">**提示**: 确保你的 Node.js 版本在 18.0 以上。</Callout>
+
+<Alert type="success" title="第二步: 创建组件">
+    创建你的第一个 React 组件!
+</Alert>
+
+### 示例 2: 问题解决方案
+
+<Alert type="error" title="常见问题">
+    如果遇到 "Module not found" 错误,请检查以下几点: - 依赖是否正确安装 - 导入路径是否正确 -
+    package.json 配置是否完整
+</Alert>
+
+<Callout emoji="🔧">
+    **解决方案**: 1. 删除 `node_modules` 文件夹 2. 删除 `package-lock.json` 3. 重新运行 `npm
+    install`
+</Callout>
+
+<Alert type="success" title="问题解决">
+    按照上述步骤操作后,问题应该就能解决了!
+</Alert>
+
+### 示例 3: 对比展示
+
+<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+    <div>
+        <Alert type="error" title="❌ 不推荐">
+            使用全局变量存储状态
+        </Alert>
+    </div>
+    <div>
+        <Alert type="success" title="✅ 推荐">
+            使用 React Hooks 管理状态
+        </Alert>
+    </div>
+</div>
+
+## 主题适配
+
+所有组件都完美支持深色/浅色主题切换:
+
+<Callout emoji="🌓">
+    **自动主题适配**: 所有 MDX 组件都使用 CSS 变量,会自动适配当前主题。试试切换主题看看效果!
+</Callout>
+
+<Alert type="info" title="技术实现">
+    组件使用 `--mdx-*` CSS 变量,在 `globals.css` 中统一管理颜色,确保主题切换时的一致性。
+</Alert>
+
+## 最佳实践
+
+<Callout emoji="📌">
+    **组件使用建议**: 1. **Alert**: 用于重要信息、警告、错误提示 2. **Callout**:
+    用于补充说明、技巧、最佳实践 3. **Image**: 合理选择尺寸,添加有意义的 caption 4.
+    **YouTube/CodeSandbox**: 用于增强教程的互动性 5. **组合使用**: 创建结构化、易读的内容
+</Callout>
+
+<Alert type="warning" title="注意事项">
+    - 不要过度使用组件,保持内容的可读性 - 确保 alt 文本和 caption 有意义 -
+    外部资源(YouTube/CodeSandbox)需要网络连接
+</Alert>
+
+<Alert type="success" title="🎉 完成">
+    现在你已经掌握了所有 MDX 组件的使用方法!开始创作精彩的博客文章吧!
+</Alert>
 
 ## 代码示例
 
-普通的代码块：
+当然,标准的 Markdown 代码块也完全支持:
 
 ```typescript
-// 这是普通的代码块
+// TypeScript 代码示例
 interface User {
     id: number;
     name: string;
@@ -59,26 +286,24 @@ const user: User = {
     name: "Alice",
     email: "alice@example.com",
 };
+
+console.log(`Hello, ${user.name}!`);
 ```
 
-## 组合使用
-
-你可以将多个组件组合使用：
-
-<Alert type="info" title="组合示例">
-    在 Alert 组件中，你可以使用 **Markdown 语法**： - 列表项 1 - 列表项 2 - 列表项 3 还可以使用
-    `行内代码` 和 [链接](https://example.com)。
-</Alert>
-
-<Callout emoji="💡">
-    **最佳实践**： 1. 使用 Alert 组件来显示重要提示 2. 使用 Callout 组件来突出重点内容 3.
-    保持组件使用的一致性
-</Callout>
+```jsx
+// React 组件示例
+function Welcome({ name }) {
+    return (
+        <div className="welcome">
+            <h1>Hello, {name}!</h1>
+            <p>Welcome to our blog!</p>
+        </div>
+    );
+}
+```
 
 ## 总结
 
-MDX 让你可以在 Markdown 中使用 React 组件，使文章更加丰富和交互式！
+MDX 让你可以在 Markdown 中无缝使用 React 组件,创建丰富、交互式的博客内容!
 
-<Alert type="success" title="完成">
-    现在你已经学会如何在 MDX 文件中使用自定义组件了！🎉
-</Alert>
+<Callout emoji="🚀">**下一步**: 尝试在你的文章中使用这些组件,创作更加生动有趣的内容!</Callout>

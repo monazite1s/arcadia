@@ -5,6 +5,7 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import type { MDXComponents } from "mdx/types";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
+import { Image } from "~/src/components/mdx/Image";
 import { Alert, Callout, CodeSandbox, Tweet, YouTube } from "~/src/components/mdx/MDXComponents";
 import { About, Post, Tag } from "~/src/lib/types";
 import type { SanityAboutPost, SanityPost, SanityPostListItem } from "~/src/lib/types/sanityTypes";
@@ -21,6 +22,7 @@ const mdxComponents: MDXComponents = {
     CodeSandbox,
     YouTube,
     Tweet,
+    Image,
 };
 
 /**
