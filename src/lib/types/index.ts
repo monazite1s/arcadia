@@ -10,6 +10,12 @@ export interface Post {
     series?: string; // 专栏名称
 }
 
+export interface About {
+    slug: string;
+    title: string;
+    content: ReactNode; // MDX content or compiled HTML
+}
+
 export interface Tag {
     name: string;
     count: number;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GlobalFooter } from "~/src/components/layout/GlobalFooter";
 import { GlobalHeader } from "~/src/components/layout/GlobalHeader";
 import { ThemeProvider } from "~/src/components/providers/ThemeProvider";
@@ -71,6 +72,8 @@ export default function RootLayout({
                         <GlobalFooter />
                     </div>
                 </ThemeProvider>
+                {/* Vercel 性能监控埋点 */}
+                <SpeedInsights />
             </body>
         </html>
     );

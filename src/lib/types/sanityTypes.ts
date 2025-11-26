@@ -48,3 +48,11 @@ export interface SanityPostListItem {
     series?: string;
     image?: SanityImageAsset;
 }
+
+export interface SanityAboutPost {
+    _id: string;
+    title: string;
+    slug: SanitySlug;
+    publishedAt: string;
+    body: string;
+}

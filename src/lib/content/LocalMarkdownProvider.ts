@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { parseMDX } from "~/src/lib/markdown/mdxParser";
-import { Post, Tag } from "~/src/lib/types";
+import { About, Post, Tag } from "~/src/lib/types";
 
 import { ContentProvider } from "./ContentProvider";
 
@@ -106,5 +106,19 @@ export class LocalMarkdownProvider implements ContentProvider {
     async getPostsByTag(tag: string): Promise<Post[]> {
         const posts = await this.getPosts();
         return posts.filter((post) => post.tags.includes(tag));
+    }
+
+    async getAboutPage(): Promise<About | null> {
+        const aboutPath = path.join(process.cwd(), "src/content/about/about.mdx");
+        if (!fs.existsSync(aboutPath)) return null;
+
+        const source = fs.readFileSync(aboutPath, "utf8");
+        const { frontmatter, content } = await parseMDX(source);
+
+        return {
+            slug: "about",
+            title: frontmatter.title,
+            content,
+        };
     }
 }

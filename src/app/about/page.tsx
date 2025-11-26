@@ -1,28 +1,43 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import fs from "fs/promises";
-import path from "path";
 import { ArticleBody } from "~/src/components/blog/ArticleBody";
 import { Stack } from "~/src/components/ui/layout";
-import { parseMDX } from "~/src/lib/markdown/mdxParser";
-
-const ABOUT_FILE_PATH = path.join(process.cwd(), "src/content/about/about.mdx");
+import { getContentProvider } from "~/src/lib/content";
 
 async function getAboutContent() {
-    const source = await fs.readFile(ABOUT_FILE_PATH, "utf8");
-    return parseMDX(source);
+    const provider = getContentProvider();
+    const post = await provider.getAboutPage();
+
+    if (!post) {
+        return null;
+    }
+
+    return post;
 }
 
 export async function generateMetadata() {
-    const { frontmatter } = await getAboutContent();
+    const post = await getAboutContent();
+
+    if (!post) {
+        return {
+            title: "关于 | Arcadia",
+            description: "关于 Arcadia 博客",
+        };
+    }
+
     return {
-        title: frontmatter.title ? `${frontmatter.title} | Arcadia` : "关于 | Arcadia",
-        description: frontmatter.excerpt ?? "关于 Arcadia 博客",
+        title: post.title ? `${post.title} | Arcadia` : "关于 | Arcadia",
+        description: "关于 Arcadia 博客",
     };
 }
 
 export default async function AboutPage() {
-    const { content } = await getAboutContent();
+    const post = await getAboutContent();
+
+    if (!post) {
+        notFound();
+    }
 
     return (
         <div className="container mx-auto max-w-4xl px-4 py-12">
@@ -34,7 +49,7 @@ export default async function AboutPage() {
                     ← 返回首页
                 </Link>
 
-                <ArticleBody>{content}</ArticleBody>
+                <ArticleBody>{post.content}</ArticleBody>
             </Stack>
         </div>
     );

@@ -1,4 +1,4 @@
-import { Post, Tag } from "~/src/lib/types";
+import { About, Post, Tag } from "~/src/lib/types";
 
 export interface ContentProvider {
     /**
@@ -20,4 +20,9 @@ export interface ContentProvider {
      * Get posts associated with a specific tag.
      */
     getPostsByTag(tag: string): Promise<Post[]>;
+
+    /**
+     * Get the About page content.
+     */
+    getAboutPage(): Promise<About | null>;
 }

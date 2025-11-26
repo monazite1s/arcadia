@@ -6,8 +6,8 @@ import type { MDXComponents } from "mdx/types";
 import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
 import { Alert, Callout, CodeSandbox, Tweet, YouTube } from "~/src/components/mdx/MDXComponents";
-import { Post, Tag } from "~/src/lib/types";
-import type { SanityPost, SanityPostListItem } from "~/src/lib/types/sanityTypes";
+import { About, Post, Tag } from "~/src/lib/types";
+import type { SanityAboutPost, SanityPost, SanityPostListItem } from "~/src/lib/types/sanityTypes";
 import { client } from "~/src/sanity/client";
 
 import { ContentProvider } from "./ContentProvider";
@@ -177,5 +177,57 @@ export class SanityContentProvider implements ContentProvider {
             series: sanityPost.series,
             content: React.createElement(React.Fragment),
         }));
+    }
+    /**
+     * Get the About page content.
+     * Assumes there is a post with slug "about" in Sanity.
+     */
+    async getAboutPage(): Promise<About | null> {
+        const query = `*[_type == "about"] {
+            _id,
+            title,
+            slug,
+            publishedAt,
+            body
+        }`;
+
+        const aboutPost = (
+            await client.fetch(
+                query,
+                {},
+                {
+                    next: { revalidate: 30 },
+                }
+            )
+        )[0] as SanityAboutPost;
+
+        const { content } = await compileMDX({
+            source: aboutPost.body,
+            options: {
+                parseFrontmatter: false,
+                mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                    rehypePlugins: [
+                        [
+                            rehypePrettyCode,
+                            {
+                                theme: {
+                                    dark: "github-dark",
+                                    light: "github-light",
+                                },
+                                keepBackground: false,
+                            },
+                        ],
+                    ],
+                },
+            },
+            components: mdxComponents,
+        });
+
+        return {
+            slug: aboutPost.slug.current,
+            title: aboutPost.title,
+            content,
+        };
     }
 }
