@@ -13,13 +13,13 @@ export default function Home() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                     <Link
                         href="/blog"
                         className="group border-border bg-card hover:border-primary relative flex h-24 w-32 flex-col items-center justify-center rounded-xl border p-4 transition-all hover:shadow-[0_0_30px_-10px_var(--color-primary)]"
                     >
                         <span className="group-hover:text-primary text-lg font-bold transition-colors">
-                            秘笈
+                            博客
                         </span>
                         <span className="text-muted-foreground mt-1 text-xs">Blog</span>
                     </Link>
@@ -29,7 +29,7 @@ export default function Home() {
                         className="group border-border bg-card hover:border-primary relative flex h-24 w-32 flex-col items-center justify-center rounded-xl border p-4 transition-all hover:shadow-[0_0_30px_-10px_var(--color-primary)]"
                     >
                         <span className="group-hover:text-primary text-lg font-bold transition-colors">
-                            书橱
+                            归档
                         </span>
                         <span className="text-muted-foreground mt-1 text-xs">Archives</span>
                     </Link>
@@ -42,6 +42,16 @@ export default function Home() {
                             日历
                         </span>
                         <span className="text-muted-foreground mt-1 text-xs">Calendar</span>
+                    </Link>
+
+                    <Link
+                        href="/about"
+                        className="group border-border bg-card hover:border-primary relative flex h-24 w-32 flex-col items-center justify-center rounded-xl border p-4 transition-all hover:shadow-[0_0_30px_-10px_var(--color-primary)]"
+                    >
+                        <span className="group-hover:text-primary text-lg font-bold transition-colors">
+                            杂谈
+                        </span>
+                        <span className="text-muted-foreground mt-1 text-xs">About</span>
                     </Link>
                 </div>
 

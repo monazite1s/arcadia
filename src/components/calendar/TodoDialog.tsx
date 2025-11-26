@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { format } from "date-fns";
+import { ConfirmDialog } from "~/src/components/ui/ConfirmDialog";
 import { Card } from "~/src/components/ui/card";
 import { Flex, Stack } from "~/src/components/ui/layout";
 
@@ -18,6 +19,8 @@ export function TodoDialog({ isOpen, onClose, selectedDate }: TodoDialogProps) {
     const { events, addEvent, deleteEvent } = useCalendarStore();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [eventToDelete, setEventToDelete] = useState<string | null>(null);
 
     const dayEvents = events.filter((event) => {
         const eventDate = new Date(event.date);
@@ -42,10 +45,22 @@ export function TodoDialog({ isOpen, onClose, selectedDate }: TodoDialogProps) {
         setDescription("");
     };
 
-    const handleDelete = (eventId: string) => {
-        if (confirm("确定要删除这个待办吗？")) {
-            deleteEvent(eventId);
+    const handleDeleteClick = (eventId: string) => {
+        setEventToDelete(eventId);
+        setConfirmOpen(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (eventToDelete) {
+            deleteEvent(eventToDelete);
         }
+        setConfirmOpen(false);
+        setEventToDelete(null);
+    };
+
+    const handleCancelDelete = () => {
+        setConfirmOpen(false);
+        setEventToDelete(null);
     };
 
     if (!isOpen) return null;
@@ -118,7 +133,7 @@ export function TodoDialog({ isOpen, onClose, selectedDate }: TodoDialogProps) {
                                         )}
                                     </Stack>
                                     <button
-                                        onClick={() => handleDelete(event.id!)}
+                                        onClick={() => handleDeleteClick(event.id!)}
                                         className="text-destructive hover:text-destructive/80 ml-2"
                                     >
                                         删除
@@ -129,6 +144,14 @@ export function TodoDialog({ isOpen, onClose, selectedDate }: TodoDialogProps) {
                     )}
                 </Stack>
             </Card>
+
+            <ConfirmDialog
+                isOpen={confirmOpen}
+                title="删除待办"
+                message="确定要删除这个待办吗？此操作无法撤销。"
+                onConfirm={handleConfirmDelete}
+                onCancel={handleCancelDelete}
+            />
         </div>
     );
 }

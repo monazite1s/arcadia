@@ -14,10 +14,12 @@ export function GlobalFooter() {
             style={{ minHeight: "80px" }}
         >
             <Stack className="px-6 py-6 text-center" gap="0.5rem" align="center">
-                <p className="font-mono text-sm">
+                <p className="text-sm text-white">
                     © {currentYear} Arcadia. Built with Next.js & shadcn/ui.
                 </p>
-                <p className="text-xs">一个高度工程化、可扩展且模块化的全栈博客 Starter。</p>
+                <p className="text-xs text-white">
+                    一个高度工程化、可扩展且模块化的全栈博客 Starter。
+                </p>
             </Stack>
         </Flex>
     );

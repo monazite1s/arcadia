@@ -62,7 +62,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         if (!mounted) return;
 
         const unsubscribe = subscribeToSystemTheme((systemTheme) => {
-            const stored = typeof window !== "undefined" ? localStorage.getItem(THEME_KEY) : null;
+            const stored = localStorage.getItem(THEME_KEY);
             if (stored === "dark" || stored === "light") {
                 return;
             }

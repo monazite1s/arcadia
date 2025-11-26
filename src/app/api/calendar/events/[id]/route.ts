@@ -11,8 +11,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     try {
         const { id } = await params;
         const body = await request.json();
-
-        // Ensure date is Date object if it exists in the body
         const eventData = {
             ...body,
             ...(body.date && { date: new Date(body.date) }),

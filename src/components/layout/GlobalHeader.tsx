@@ -10,8 +10,8 @@ import { cn } from "~/src/lib/utils";
 
 const navItems = [
     { name: "小屋", href: "/" },
-    { name: "秘笈", href: "/blog" },
-    { name: "书橱", href: "/archives" },
+    { name: "博客", href: "/blog" },
+    { name: "归档", href: "/archives" },
     { name: "日历", href: "/calendar" },
     { name: "杂谈", href: "/about" },
 ];

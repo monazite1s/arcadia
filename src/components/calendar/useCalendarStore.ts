@@ -1,18 +1,21 @@
+"use client";
+
 import { create } from "zustand";
 import { ApiCalendarProvider } from "~/src/lib/calendar/ApiCalendarProvider";
 import { CalendarEvent } from "~/src/lib/types";
 
-let provider: ApiCalendarProvider;
-if (typeof window !== "undefined") {
-    provider = new ApiCalendarProvider();
-}
+const provider = new ApiCalendarProvider();
+
+const getCacheKey = (start: Date, end: Date) =>
+    `${start.toISOString().split("T")[0]}_${end.toISOString().split("T")[0]}`;
 
 interface CalendarState {
     events: CalendarEvent[];
     currentDate: Date;
     isLoading: boolean;
+    cache: Map<string, CalendarEvent[]>;
 
-    // Actions
+    getEvents: (start?: Date, end?: Date) => CalendarEvent[];
     setCurrentDate: (date: Date) => void;
     fetchEvents: (start: Date, end: Date) => Promise<void>;
     addEvent: (event: Omit<CalendarEvent, "id" | "createdAt" | "updatedAt">) => Promise<void>;
@@ -24,19 +27,38 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
     events: [],
     currentDate: new Date(),
     isLoading: false,
+    cache: new Map(),
+
+    getEvents: (start?: Date, end?: Date) => {
+        const { events } = get();
+        if (!start || !end) return events;
+
+        return events.filter((event) => {
+            const eventDate = new Date(event.date);
+            return eventDate >= start && eventDate <= end;
+        });
+    },
 
     setCurrentDate: (date) => {
         set({ currentDate: date });
-        // fetchEvents will be called by the component effect when date changes
     },
 
     fetchEvents: async (start: Date, end: Date) => {
-        if (!provider) return;
-        set({ isLoading: true });
+        const { cache } = get();
+        const cacheKey = getCacheKey(start, end);
+
+        const cached = cache.get(cacheKey);
+        if (cached) {
+            set({ events: cached, isLoading: true });
+        } else {
+            set({ isLoading: true });
+        }
 
         try {
             const events = await provider.getEvents(start, end);
-            set({ events, isLoading: false });
+            const newCache = new Map(cache);
+            newCache.set(cacheKey, events);
+            set({ events, isLoading: false, cache: newCache });
         } catch (error) {
             console.error("Failed to fetch events:", error);
             set({ isLoading: false });
@@ -44,7 +66,6 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
     },
 
     addEvent: async (eventData) => {
-        if (!provider) return;
         try {
             const newEvent = await provider.createEvent(eventData);
             set((state) => ({ events: [...state.events, newEvent] }));
@@ -55,7 +76,6 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
     },
 
     updateEvent: async (event) => {
-        if (!provider) return;
         try {
             const updatedEvent = await provider.updateEvent(event);
             set((state) => ({
@@ -68,7 +88,6 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
     },
 
     deleteEvent: async (id) => {
-        if (!provider) return;
         try {
             await provider.deleteEvent(id);
             set((state) => ({
