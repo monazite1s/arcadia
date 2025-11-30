@@ -7,6 +7,7 @@ import { GlobalHeader } from "~/src/components/layout/GlobalHeader";
 import { ThemeProvider } from "~/src/components/providers/ThemeProvider";
 import { cn } from "~/src/lib/utils";
 
+import { AuthProvider } from "../components/providers/AuthProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -66,11 +67,13 @@ export default function RootLayout({
             </head>
             <body className={cn(inter.className, jetbrainsMono.className, "antialiased")}>
                 <ThemeProvider>
-                    <div className="flex min-h-screen flex-col">
-                        <GlobalHeader />
-                        <main className="flex-1">{children}</main>
-                        <GlobalFooter />
-                    </div>
+                    <AuthProvider>
+                        <div className="flex min-h-screen flex-col">
+                            <GlobalHeader />
+                            <main className="flex-1">{children}</main>
+                            <GlobalFooter />
+                        </div>
+                    </AuthProvider>
                 </ThemeProvider>
                 {/* Vercel 性能监控埋点 */}
                 <SpeedInsights />

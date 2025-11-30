@@ -18,6 +18,10 @@ export const resolveTheme = (): Theme => {
     return getStoredTheme() ?? getSystemTheme();
 };
 
+/**
+ * 应用主题
+ * @param theme
+ */
 export const applyThemeToDocument = (theme: Theme) => {
     if (typeof document === "undefined") return;
     const root = document.documentElement;
@@ -26,11 +30,20 @@ export const applyThemeToDocument = (theme: Theme) => {
     root.style.colorScheme = theme;
 };
 
+/**
+ * 持久化主题
+ * @param theme
+ */
 export const persistTheme = (theme: Theme) => {
     if (typeof window === "undefined") return;
     window.localStorage.setItem(THEME_STORAGE_KEY, theme);
 };
 
+/**
+ * 订阅系统主题变化
+ * @param cb
+ * @returns
+ */
 export const subscribeToSystemTheme = (cb: (theme: Theme) => void): (() => void) | undefined => {
     if (typeof window === "undefined") return undefined;
     const mediaQuery = window.matchMedia(DARK_MEDIA_QUERY);

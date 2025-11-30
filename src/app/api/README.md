@@ -27,7 +27,7 @@
 
 - `GET /api/posts/:slug/comments` - 获取文章评论
 - `POST /api/posts/:slug/comments` - 发表评论（需认证）
-- `DELETE /api/comments/:id` - 删除评论（需认证）
+- `DELETE /api/comments/user/:id` - 删除评论（需认证）
 
 ### 用户认证
 

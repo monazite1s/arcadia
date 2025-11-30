@@ -4,15 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Moon, Sun } from "lucide-react";
+import { AuthButton } from "~/src/components/auth/AuthButton";
 import { useTheme } from "~/src/components/providers/ThemeProvider";
 import { Flex } from "~/src/components/ui/layout";
 import { cn } from "~/src/lib/utils";
+
+import { Button } from "../ui/button";
 
 const navItems = [
     { name: "小屋", href: "/" },
     { name: "博客", href: "/blog" },
     { name: "归档", href: "/archives" },
     { name: "日历", href: "/calendar" },
+    { name: "留言板", href: "/guestbook" },
     { name: "杂谈", href: "/about" },
 ];
 
@@ -55,9 +59,15 @@ export function GlobalHeader() {
 
                     <div className="bg-border mx-2 h-6 w-px" />
 
-                    <button
+                    {/* Auth Button */}
+                    <AuthButton />
+
+                    <div className="bg-border mx-2 h-6 w-px" />
+
+                    <Button
                         onClick={toggleTheme}
-                        className="border-border hover:bg-muted/50 text-muted-foreground hover:text-foreground rounded-md border-2 px-2 py-1.5 transition-colors"
+                        variant="outline"
+                        size="icon"
                         aria-label="Toggle theme"
                         suppressHydrationWarning
                     >
@@ -66,7 +76,7 @@ export function GlobalHeader() {
                         ) : (
                             <Moon className="h-4 w-4" />
                         )}
-                    </button>
+                    </Button>
                 </Flex>
             </Flex>
         </Flex>

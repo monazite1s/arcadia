@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { format } from "date-fns";
 import { ArticleBody } from "~/src/components/blog/ArticleBody";
+import { CommentSection } from "~/src/components/blog/CommentSection";
 import { SeriesSidebar } from "~/src/components/blog/SeriesSidebar";
 import { TableOfContents } from "~/src/components/blog/TableOfContents";
 import { Flex, Stack } from "~/src/components/ui/layout";
@@ -118,6 +119,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     <TableOfContents />
                 </aside>
             </div>
+            <Stack gap="1rem" className="mx-auto w-full max-w-[1000px]">
+                {/* 文章内容 */}
+                <ArticleBody>{post.content}</ArticleBody>
+                {/* 评论区 */}
+                <div className="bg-border my-8 h-px" />
+                <CommentSection postSlug={slugStr} />
+            </Stack>
         </div>
     );
 }

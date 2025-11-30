@@ -22,3 +22,111 @@ model CalendarEvent {
   @@index([date])
   @@map("calendar_events")
 }
+
+// ============================================
+// NextAuth.js 认证相关表
+// ============================================
+
+// 用户表
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?   // 用户头像 URL
+  
+  // 关联关系
+  accounts      Account[]
+  sessions      Session[]
+  comments      Comment[]
+  guestbookEntries GuestbookEntry[]
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+// OAuth 账户关联表 (支持多个 OAuth Provider)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String  // oauth, email, credentials
+  provider          String  // github, google, wechat 等
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+// Session 表 (用于 database session strategy,当前使用 JWT 可选)
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// ============================================
+// 应用业务表
+// ============================================
+
+// 博客评论表
+model Comment {
+  id        String   @id @default(cuid())
+  postSlug  String   @map("post_slug") // 关联博客文章的 slug
+  userId    String   @map("user_id")
+  content   String   @db.Text
+  parentId  String?  @map("parent_id") // 支持嵌套回复
+  
+  // 关联关系
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([postSlug]) // 加速按文章查询评论
+  @@index([userId])   // 加速按用户查询评论
+  @@map("comments")
+}
+
+// 站点留言板表
+model GuestbookEntry {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  content   String   @db.Text
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("guestbook_entries")
+}
+
+// 站点统计表
+model SiteStats {
+  id            String   @id @default(cuid())
+  totalVisits   Int      @default(0) @map("total_visits")
+  uniqueVisitors Int     @default(0) @map("unique_visitors")
+  lastUpdated   DateTime @updatedAt @map("last_updated")
+
+  @@map("site_stats")
+}
+

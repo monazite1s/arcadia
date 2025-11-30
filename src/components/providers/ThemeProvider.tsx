@@ -31,15 +31,15 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 export function ThemeProvider({ children }: { children: ReactNode }) {
     const [mounted, setMounted] = useState(false);
     const [theme, setThemeState] = useState<Theme>(() => {
-        // SSR: always return light to avoid hydration mismatch
+        // SSR: 初始使用 light 避免水合冲突
         if (typeof window === "undefined") {
             return "light";
         }
-        // Client initial render: use resolved theme
+        // Client 初始渲染
         return resolveTheme();
     });
 
-    // Apply theme on mount and mark as mounted
+    // 挂载时应用主题并标记为已挂载
     useEffect(() => {
         const actualTheme = resolveTheme();
         if (actualTheme !== theme) {
@@ -48,7 +48,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         applyThemeToDocument(actualTheme);
         setMounted(true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Only run once on mount
+    }, []);
 
     const applyAndStoreTheme = useCallback((nextTheme: Theme, persist = true) => {
         setThemeState(nextTheme);
