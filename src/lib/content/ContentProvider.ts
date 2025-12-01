@@ -1,4 +1,4 @@
-import { About, Post, Tag } from "~/src/lib/types";
+import { About, DocCategory, DocPage, Post, Tag } from "~/src/lib/types";
 
 export interface ContentProvider {
     /**
@@ -25,4 +25,15 @@ export interface ContentProvider {
      * Get the About page content.
      */
     getAboutPage(): Promise<About | null>;
+
+    /**
+     * Get the documentation tree structure.
+     */
+    getDocTree(): Promise<DocCategory[]>;
+
+    /**
+     * Get a single documentation page by its slug.
+     * Note: slug is the full path or unique identifier.
+     */
+    getDocPageBySlug(slug: string): Promise<DocPage | null>;
 }

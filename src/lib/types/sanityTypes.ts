@@ -56,3 +56,24 @@ export interface SanityAboutPost {
     publishedAt: string;
     body: string;
 }
+
+export interface SanityDocCategory {
+    _id: string;
+    title: string;
+    slug: SanitySlug;
+    order: number;
+    parentCategory?: {
+        _ref: string;
+    };
+}
+
+export interface SanityDocPage {
+    _id: string;
+    title: string;
+    slug: SanitySlug;
+    content: string; // Markdown/MDX
+    category: {
+        _ref: string;
+    };
+    order: number;
+}

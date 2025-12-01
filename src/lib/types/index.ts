@@ -83,3 +83,21 @@ export interface GuestbookProvider {
     createEntry(content: string): Promise<GuestbookEntry>;
     deleteEntry(id: string): Promise<void>;
 }
+
+/**
+ * Documentation System Types
+ */
+export interface DocPage {
+    slug: string;
+    title: string;
+    content: ReactNode;
+    order: number;
+}
+
+export interface DocCategory {
+    title: string;
+    slug: string;
+    order: number;
+    children?: DocCategory[];
+    pages?: DocPage[];
+}

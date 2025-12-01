@@ -7,8 +7,14 @@ import rehypePrettyCode from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
 import { Image } from "~/src/components/mdx/Image";
 import { Alert, Callout, CodeSandbox, Tweet, YouTube } from "~/src/components/mdx/MDXComponents";
-import { About, Post, Tag } from "~/src/lib/types";
-import type { SanityAboutPost, SanityPost, SanityPostListItem } from "~/src/lib/types/sanityTypes";
+import { About, DocCategory, DocPage, Post, Tag } from "~/src/lib/types";
+import type {
+    SanityAboutPost,
+    SanityDocCategory,
+    SanityDocPage,
+    SanityPost,
+    SanityPostListItem,
+} from "~/src/lib/types/sanityTypes";
 import { client } from "~/src/sanity/client";
 
 import { ContentProvider } from "./ContentProvider";
@@ -229,6 +235,160 @@ export class SanityContentProvider implements ContentProvider {
         return {
             slug: aboutPost.slug.current,
             title: aboutPost.title,
+            content,
+        };
+    }
+
+    /**
+     * Get the documentation tree structure.
+     * Fetches all categories and pages, then reconstructs the tree.
+     */
+    async getDocTree(): Promise<DocCategory[]> {
+        // Fetch all categories
+        const categoriesQuery = `*[_type == "docCategory"] | order(order asc) {
+            _id,
+            title,
+            slug,
+            order,
+            parentCategory
+        }`;
+
+        // Fetch all pages
+        const pagesQuery = `*[_type == "docPage"] | order(order asc) {
+            _id,
+            title,
+            slug,
+            order,
+            category
+        }`;
+
+        const [sanityCategories, sanityPages] = (await Promise.all([
+            client.fetch(categoriesQuery, {}, { next: { revalidate: 30 } }),
+            client.fetch(pagesQuery, {}, { next: { revalidate: 30 } }),
+        ])) as [SanityDocCategory[], SanityDocPage[]];
+
+        // Build the tree
+        const categoryMap = new Map<string, DocCategory & { _id: string; parentId?: string }>();
+
+        // 1. Create category nodes
+        sanityCategories.forEach((cat) => {
+            categoryMap.set(cat._id, {
+                _id: cat._id,
+                title: cat.title,
+                slug: cat.slug.current,
+                order: cat.order,
+                parentId: cat.parentCategory?._ref,
+                children: [],
+                pages: [],
+            });
+        });
+
+        // 2. Add pages to categories
+        sanityPages.forEach((page) => {
+            const cat = categoryMap.get(page.category._ref);
+            if (cat) {
+                cat.pages = cat.pages || [];
+                cat.pages.push({
+                    title: page.title,
+                    slug: page.slug.current,
+                    order: page.order,
+                    content: React.createElement(React.Fragment), // Content not needed for tree
+                });
+            }
+        });
+
+        // 3. Assemble tree
+        const rootCategories: DocCategory[] = [];
+
+        categoryMap.forEach((cat) => {
+            if (cat.parentId) {
+                const parent = categoryMap.get(cat.parentId);
+                if (parent) {
+                    parent.children = parent.children || [];
+                    parent.children.push(cat);
+                } else {
+                    // Parent not found (maybe deleted), treat as root or orphan
+                    rootCategories.push(cat);
+                }
+            } else {
+                rootCategories.push(cat);
+            }
+        });
+
+        // Sort root categories and children
+        const sortItems = (items: { order: number }[]) => items.sort((a, b) => a.order - b.order);
+
+        const recursiveSort = (cats: DocCategory[]) => {
+            sortItems(cats);
+            cats.forEach((c) => {
+                if (c.children) recursiveSort(c.children);
+                if (c.pages) sortItems(c.pages);
+            });
+        };
+
+        recursiveSort(rootCategories);
+
+        return rootCategories;
+    }
+
+    /**
+     * Get a single documentation page by its slug.
+     */
+    async getDocPageBySlug(slug: string): Promise<DocPage | null> {
+        // Note: slug in Sanity is just the last part, but we might pass full path.
+        // For now assuming slug is unique enough or we match by the 'current' field.
+        // If slug is 'docs/guide/intro', we might need to extract 'intro'.
+        // Let's assume the slug passed here is the 'current' slug from Sanity.
+
+        const cleanSlug = slug.split("/").pop() || slug;
+
+        const query = `*[_type == "docPage" && slug.current == $slug][0] {
+            _id,
+            title,
+            slug,
+            content,
+            order,
+            category
+        }`;
+
+        const sanityPage = (await client.fetch(
+            query,
+            { slug: cleanSlug },
+            { next: { revalidate: 30 } }
+        )) as SanityDocPage | null;
+
+        if (!sanityPage) {
+            return null;
+        }
+
+        // Compile MDX
+        const { content } = await compileMDX({
+            source: sanityPage.content || "",
+            options: {
+                parseFrontmatter: false,
+                mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                    rehypePlugins: [
+                        [
+                            rehypePrettyCode,
+                            {
+                                theme: {
+                                    dark: "github-dark",
+                                    light: "github-light",
+                                },
+                                keepBackground: false,
+                            },
+                        ],
+                    ],
+                },
+            },
+            components: mdxComponents,
+        });
+
+        return {
+            slug: sanityPage.slug.current,
+            title: sanityPage.title,
+            order: sanityPage.order,
             content,
         };
     }
