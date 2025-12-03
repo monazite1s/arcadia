@@ -10,21 +10,6 @@ datasource db {
   url      = env("DATABASE_URL") // 使用直连 URL 进行迁移
 }
 
-// 日历事件表
-model CalendarEvent {
-  id          String   @id @default(cuid())
-  title       String
-  description String?  @db.Text
-  date        DateTime @map("event_date")
-  userId      String   @map("user_id")  // 用户关联
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  @@index([date])
-  @@index([userId])  // 加速按用户查询
-  @@map("calendar_events")
-}
 
 // ============================================
 // NextAuth.js 认证相关表
@@ -43,7 +28,6 @@ model User {
   sessions         Session[]
   comments         Comment[]
   guestbookEntries GuestbookEntry[]
-  calendarEvents   CalendarEvent[]  // 日历事件
   
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

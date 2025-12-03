@@ -25,16 +25,6 @@ export interface Tag {
     count: number;
 }
 
-export interface CalendarEvent {
-    id: string;
-    title: string;
-    description?: string;
-    date: Date;
-    userId: string; // 用户ID,用于多用户隔离
-    createdAt: Date;
-    updatedAt: Date;
-}
-
 /**
  * Next Auth Provider
  */

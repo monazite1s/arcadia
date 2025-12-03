@@ -25,6 +25,16 @@ export default function Home() {
                     </Link>
 
                     <Link
+                        href="/docs"
+                        className="group border-border bg-card hover:border-primary relative flex h-24 w-32 flex-col items-center justify-center rounded-xl border p-4 transition-all hover:shadow-[0_0_30px_-10px_var(--color-primary)]"
+                    >
+                        <span className="group-hover:text-primary text-lg font-bold transition-colors">
+                            知识库
+                        </span>
+                        <span className="text-muted-foreground mt-1 text-xs">Docs</span>
+                    </Link>
+
+                    <Link
                         href="/archives"
                         className="group border-border bg-card hover:border-primary relative flex h-24 w-32 flex-col items-center justify-center rounded-xl border p-4 transition-all hover:shadow-[0_0_30px_-10px_var(--color-primary)]"
                     >
@@ -32,16 +42,6 @@ export default function Home() {
                             归档
                         </span>
                         <span className="text-muted-foreground mt-1 text-xs">Archives</span>
-                    </Link>
-
-                    <Link
-                        href="/calendar"
-                        className="group border-border bg-card hover:border-primary relative flex h-24 w-32 flex-col items-center justify-center rounded-xl border p-4 transition-all hover:shadow-[0_0_30px_-10px_var(--color-primary)]"
-                    >
-                        <span className="group-hover:text-primary text-lg font-bold transition-colors">
-                            日历
-                        </span>
-                        <span className="text-muted-foreground mt-1 text-xs">Calendar</span>
                     </Link>
 
                     <Link
