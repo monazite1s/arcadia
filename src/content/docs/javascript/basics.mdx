@@ -1,0 +1,68 @@
+---
+title: JavaScript 基础语法
+order: 1
+---
+
+# JavaScript 基础语法
+
+本文档介绍 JavaScript 的基础语法知识。
+
+## 变量声明
+
+JavaScript 提供了三种变量声明方式：
+
+### let
+
+`let` 用于声明块级作用域变量：
+
+```javascript
+let count = 0;
+count = 1; // 可以重新赋值
+```
+
+### const
+
+`const` 用于声明常量：
+
+```javascript
+const MAX_SIZE = 100;
+// MAX_SIZE = 200; // 报错：不能重新赋值
+```
+
+### var
+
+`var` 是旧式声明方式，不推荐使用：
+
+```javascript
+var name = "Alice";
+```
+
+## 数据类型
+
+JavaScript 有以下基本数据类型：
+
+- **String**: 字符串
+- **Number**: 数字
+- **Boolean**: 布尔值
+- **Null**: 空值
+- **Undefined**: 未定义
+- **Symbol**: 符号
+- **BigInt**: 大整数
+
+## 函数
+
+函数是 JavaScript 的核心概念：
+
+```javascript
+// 函数声明
+function greet(name) {
+    return `Hello, ${name}!`;
+}
+
+// 箭头函数
+const add = (a, b) => a + b;
+```
+
+## 总结
+
+这些是 JavaScript 的基础概念，掌握它们是进一步学习的基础。

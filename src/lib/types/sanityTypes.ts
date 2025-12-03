@@ -64,6 +64,7 @@ export interface SanityDocCategory {
     order: number;
     parentCategory?: {
         _ref: string;
+        _type: "reference";
     };
 }
 
@@ -71,9 +72,10 @@ export interface SanityDocPage {
     _id: string;
     title: string;
     slug: SanitySlug;
-    content: string; // Markdown/MDX
+    content: string; // MDX 格式文本
     category: {
         _ref: string;
+        _type: "reference";
     };
     order: number;
 }

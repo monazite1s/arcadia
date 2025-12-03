@@ -1,0 +1,98 @@
+---
+title: JavaScript 进阶知识
+order: 2
+---
+
+# JavaScript 进阶知识
+
+深入理解 JavaScript 的高级特性。
+
+## 闭包
+
+闭包是函数和其词法环境的组合：
+
+```javascript
+function createCounter() {
+    let count = 0;
+
+    return {
+        increment() {
+            return ++count;
+        },
+        decrement() {
+            return --count;
+        },
+        getCount() {
+            return count;
+        },
+    };
+}
+
+const counter = createCounter();
+console.log(counter.increment()); // 1
+console.log(counter.increment()); // 2
+console.log(counter.getCount()); // 2
+```
+
+## 原型链
+
+JavaScript 使用原型链实现继承：
+
+```javascript
+function Person(name) {
+    this.name = name;
+}
+
+Person.prototype.greet = function () {
+    console.log(`Hello, I'm ${this.name}`);
+};
+
+const alice = new Person("Alice");
+alice.greet(); // "Hello, I'm Alice"
+```
+
+## 异步编程
+
+### Promise
+
+Promise 用于处理异步操作：
+
+```javascript
+const fetchData = () => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve("Data loaded");
+        }, 1000);
+    });
+};
+
+fetchData().then((data) => console.log(data));
+```
+
+### Async/Await
+
+更简洁的异步语法：
+
+```javascript
+async function loadData() {
+    try {
+        const data = await fetchData();
+        console.log(data);
+    } catch (error) {
+        console.error(error);
+    }
+}
+```
+
+## 模块系统
+
+ES6 引入了标准的模块系统：
+
+```javascript
+// utils.js
+export const add = (a, b) => a + b;
+export const multiply = (a, b) => a * b;
+
+// main.js
+import { add, multiply } from './utils.js';
+```

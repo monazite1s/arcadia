@@ -14,6 +14,7 @@ import { Button } from "../ui/button";
 const navItems = [
     { name: "小屋", href: "/" },
     { name: "博客", href: "/blog" },
+    { name: "知识库", href: "/docs" },
     { name: "归档", href: "/archives" },
     { name: "日历", href: "/calendar" },
     { name: "留言板", href: "/guestbook" },

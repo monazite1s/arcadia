@@ -10,10 +10,9 @@ import { Alert, Callout, CodeSandbox, Tweet, YouTube } from "~/src/components/md
 import { About, DocCategory, DocPage, Post, Tag } from "~/src/lib/types";
 import type {
     SanityAboutPost,
-    SanityDocCategory,
-    SanityDocPage,
     SanityPost,
     SanityPostListItem,
+    SanitySlug,
 } from "~/src/lib/types/sanityTypes";
 import { client } from "~/src/sanity/client";
 
@@ -244,28 +243,43 @@ export class SanityContentProvider implements ContentProvider {
      * Fetches all categories and pages, then reconstructs the tree.
      */
     async getDocTree(): Promise<DocCategory[]> {
-        // Fetch all categories
+        // Fetch all categories with parent references
         const categoriesQuery = `*[_type == "docCategory"] | order(order asc) {
             _id,
             title,
             slug,
             order,
-            parentCategory
+            "parentRef": parentCategory._ref
         }`;
 
-        // Fetch all pages
+        // Fetch all pages with category references
         const pagesQuery = `*[_type == "docPage"] | order(order asc) {
             _id,
             title,
             slug,
             order,
-            category
+            "categoryRef": category._ref
         }`;
 
         const [sanityCategories, sanityPages] = (await Promise.all([
             client.fetch(categoriesQuery, {}, { next: { revalidate: 30 } }),
             client.fetch(pagesQuery, {}, { next: { revalidate: 30 } }),
-        ])) as [SanityDocCategory[], SanityDocPage[]];
+        ])) as [
+            Array<{
+                _id: string;
+                title: string;
+                slug: SanitySlug;
+                order: number;
+                parentRef?: string;
+            }>,
+            Array<{
+                _id: string;
+                title: string;
+                slug: SanitySlug;
+                order: number;
+                categoryRef: string;
+            }>,
+        ];
 
         // Build the tree
         const categoryMap = new Map<string, DocCategory & { _id: string; parentId?: string }>();
@@ -277,7 +291,7 @@ export class SanityContentProvider implements ContentProvider {
                 title: cat.title,
                 slug: cat.slug.current,
                 order: cat.order,
-                parentId: cat.parentCategory?._ref,
+                parentId: cat.parentRef,
                 children: [],
                 pages: [],
             });
@@ -285,7 +299,7 @@ export class SanityContentProvider implements ContentProvider {
 
         // 2. Add pages to categories
         sanityPages.forEach((page) => {
-            const cat = categoryMap.get(page.category._ref);
+            const cat = categoryMap.get(page.categoryRef);
             if (cat) {
                 cat.pages = cat.pages || [];
                 cat.pages.push({
@@ -355,7 +369,13 @@ export class SanityContentProvider implements ContentProvider {
             query,
             { slug: cleanSlug },
             { next: { revalidate: 30 } }
-        )) as SanityDocPage | null;
+        )) as {
+            _id: string;
+            title: string;
+            slug: SanitySlug;
+            content: string;
+            order: number;
+        } | null;
 
         if (!sanityPage) {
             return null;

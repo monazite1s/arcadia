@@ -1,0 +1,117 @@
+---
+title: React 性能优化指南
+order: 2
+---
+
+# React 性能优化指南
+
+提升 React 应用性能的最佳实践。
+
+## 使用 React.memo
+
+避免不必要的重新渲染：
+
+```jsx
+import { memo } from "react";
+
+const ExpensiveComponent = memo(({ data }) => {
+    // 只有当 data 变化时才重新渲染
+    return (
+        <div>
+            {data.map((item) => (
+                <Item key={item.id} {...item} />
+            ))}
+        </div>
+    );
+});
+```
+
+## 虚拟化长列表
+
+使用 react-window 处理大量数据：
+
+```jsx
+import { FixedSizeList } from "react-window";
+
+function VirtualList({ items }) {
+    const Row = ({ index, style }) => <div style={style}>{items[index].name}</div>;
+
+    return (
+        <FixedSizeList height={600} itemCount={items.length} itemSize={35} width="100%">
+            {Row}
+        </FixedSizeList>
+    );
+}
+```
+
+## 代码分割
+
+使用动态导入减小初始加载：
+
+```jsx
+import { Suspense, lazy } from "react";
+
+const HeavyComponent = lazy(() => import("./HeavyComponent"));
+
+function App() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <HeavyComponent />
+        </Suspense>
+    );
+}
+```
+
+## 优化 Context
+
+避免 Context 导致的不必要渲染：
+
+```jsx
+import { createContext, useMemo, useState } from "react";
+
+const DataContext = createContext();
+const ActionsContext = createContext();
+
+function Provider({ children }) {
+    const [data, setData] = useState({});
+
+    // 将数据和操作分离
+    const actions = useMemo(
+        () => ({
+            update: (newData) => setData(newData),
+        }),
+        []
+    );
+
+    return (
+        <DataContext.Provider value={data}>
+            <ActionsContext.Provider value={actions}>{children}</ActionsContext.Provider>
+        </DataContext.Provider>
+    );
+}
+```
+
+## 使用 Web Workers
+
+将耗时计算移到 worker 线程：
+
+```jsx
+import { useEffect, useState } from "react";
+
+function DataProcessor({ largeDataset }) {
+    const [result, setResult] = useState(null);
+
+    useEffect(() => {
+        const worker = new Worker("/worker.js");
+
+        worker.postMessage(largeDataset);
+        worker.onmessage = (e) => {
+            setResult(e.data);
+        };
+
+        return () => worker.terminate();
+    }, [largeDataset]);
+
+    return <div>{result}</div>;
+}
+```

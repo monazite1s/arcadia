@@ -30,6 +30,7 @@ export interface CalendarEvent {
     title: string;
     description?: string;
     date: Date;
+    userId: string; // 用户ID,用于多用户隔离
     createdAt: Date;
     updatedAt: Date;
 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { getCurrentUser } from "~/src/lib/auth";
 import { CalendarService } from "~/src/lib/services/calendar.service";
 
 const service = new CalendarService();
@@ -9,6 +10,12 @@ export const dynamic = "force-dynamic";
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
+        // 要求用户登录
+        const user = await getCurrentUser();
+        if (!user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         const { id } = await params;
         const body = await request.json();
         const eventData = {
@@ -16,13 +23,15 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
             ...(body.date && { date: new Date(body.date) }),
         };
 
-        const event = await service.updateEvent(id, eventData);
+        // 更新事件,service会验证所有权
+        const event = await service.updateEvent(id, user.id, eventData);
         return NextResponse.json(event);
     } catch (error) {
         console.error("Failed to update event:", error);
+        const status = error instanceof Error && error.message.includes("Unauthorized") ? 403 : 500;
         return NextResponse.json(
             { error: error instanceof Error ? error.message : "Failed to update event" },
-            { status: 500 }
+            { status }
         );
     }
 }
@@ -32,11 +41,23 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        // 要求用户登录
+        const user = await getCurrentUser();
+        if (!user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         const { id } = await params;
-        await service.deleteEvent(id);
+
+        // 删除事件,service会验证所有权
+        await service.deleteEvent(id, user.id);
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("Failed to delete event:", error);
-        return NextResponse.json({ error: "Failed to delete event" }, { status: 500 });
+        const status = error instanceof Error && error.message.includes("Unauthorized") ? 403 : 500;
+        return NextResponse.json(
+            { error: error instanceof Error ? error.message : "Failed to delete event" },
+            { status }
+        );
     }
 }

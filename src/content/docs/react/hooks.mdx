@@ -1,0 +1,99 @@
+---
+title: React Hooks 完全指南
+order: 1
+---
+
+# React Hooks 完全指南
+
+React Hooks 让函数组件拥有状态和生命周期。
+
+## useState
+
+管理组件状态：
+
+```jsx
+import { useState } from "react";
+
+function Counter() {
+    const [count, setCount] = useState(0);
+
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => setCount(count + 1)}>Increment</button>
+        </div>
+    );
+}
+```
+
+## useEffect
+
+处理副作用：
+
+```jsx
+import { useEffect, useState } from "react";
+
+function DataFetcher() {
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        fetch("/api/data")
+            .then((res) => res.json())
+            .then(setData);
+    }, []); // 空依赖数组，只在挂载时执行
+
+    return <div>{data?.title}</div>;
+}
+```
+
+## useContext
+
+访问 Context：
+
+```jsx
+import { createContext, useContext } from "react";
+
+const ThemeContext = createContext("light");
+
+function ThemedButton() {
+    const theme = useContext(ThemeContext);
+
+    return <button className={theme}>Themed Button</button>;
+}
+```
+
+## useMemo
+
+缓存计算结果：
+
+```jsx
+import { useMemo } from "react";
+
+function ExpensiveComponent({ items }) {
+    const total = useMemo(() => {
+        return items.reduce((sum, item) => sum + item.price, 0);
+    }, [items]);
+
+    return <div>Total: {total}</div>;
+}
+```
+
+## useCallback
+
+缓存回调函数：
+
+```jsx
+import { memo, useCallback } from "react";
+
+const ChildComponent = memo(({ onClick }) => {
+    return <button onClick={onClick}>Click</button>;
+});
+
+function ParentComponent() {
+    const handleClick = useCallback(() => {
+        console.log("Clicked!");
+    }, []);
+
+    return <ChildComponent onClick={handleClick} />;
+}
+```

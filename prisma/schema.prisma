@@ -16,10 +16,13 @@ model CalendarEvent {
   title       String
   description String?  @db.Text
   date        DateTime @map("event_date")
+  userId      String   @map("user_id")  // 用户关联
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@index([date])
+  @@index([userId])  // 加速按用户查询
   @@map("calendar_events")
 }
 
@@ -36,10 +39,11 @@ model User {
   image         String?   // 用户头像 URL
   
   // 关联关系
-  accounts      Account[]
-  sessions      Session[]
-  comments      Comment[]
+  accounts         Account[]
+  sessions         Session[]
+  comments         Comment[]
   guestbookEntries GuestbookEntry[]
+  calendarEvents   CalendarEvent[]  // 日历事件
   
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
