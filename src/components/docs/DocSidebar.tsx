@@ -62,6 +62,7 @@ function CategoryItem({ category, currentPath, level }: CategoryItemProps) {
                 )}
                 onClick={() => setIsOpen(!isOpen)}
             >
+                <span className="text-foreground font-medium">{category.title}</span>
                 {(hasChildren || hasPages) && (
                     <span className="text-muted-foreground">
                         {isOpen ? (
@@ -71,7 +72,6 @@ function CategoryItem({ category, currentPath, level }: CategoryItemProps) {
                         )}
                     </span>
                 )}
-                <span className="text-foreground font-medium">{category.title}</span>
             </div>
 
             {/* 子分类和页面 */}

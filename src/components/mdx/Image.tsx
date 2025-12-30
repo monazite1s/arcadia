@@ -82,7 +82,7 @@ export function Image({
     );
 
     const imageClasses = cn(
-        "w-full h-auto rounded-lg border transition-opacity duration-300",
+        "w-full h-auto rounded-lg border transition-opacity",
         "border-[hsl(var(--mdx-image-border))]",
         isLoading && "opacity-0",
         !isLoading && "opacity-100",

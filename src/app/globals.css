@@ -238,7 +238,6 @@ body {
  * ============================================
  * 主题切换过渡动画
  * ============================================
- * 只对特定元素应用过渡，避免性能问题
  */
 html,
 body,
@@ -255,8 +254,7 @@ h6,
 p {
     transition:
         background-color 0.15s ease,
-        border-color 0.15s ease,
-        color 0.15s ease;
+        border-color 0.15s ease;
 }
 
 /**
@@ -454,7 +452,7 @@ hr:hover {
 .article-body a {
     color: hsl(var(--article-link));
     text-decoration: underline;
-    transition: color 0.15s ease;
+    transition: color 0.16s ease;
 }
 
 .article-body a:hover {
