@@ -120,9 +120,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </aside>
             </div>
             <Stack gap="1rem" className="mx-auto w-full max-w-[1000px]">
-                {/* 文章内容 */}
-                <ArticleBody>{post.content}</ArticleBody>
-                {/* 评论区 */}
                 <div className="bg-border my-8 h-px" />
                 <CommentSection postSlug={slugStr} />
             </Stack>
